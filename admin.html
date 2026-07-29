@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品管理后台</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background:#f5f7fa; color:#333; padding-bottom:40px; }
+
+.login-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:linear-gradient(135deg,#0d9488,#0f766e); display:flex; align-items:center; justify-content:center; z-index:9999; }
+.login-box { background:#fff; border-radius:16px; padding:32px 24px; width:90%; max-width:360px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.2); }
+.login-box h2 { margin-bottom:8px; font-size:20px; }
+.login-box p { color:#999; font-size:13px; margin-bottom:20px; }
+.login-box input { width:100%; padding:12px; border:2px solid #e0e0e0; border-radius:8px; font-size:16px; text-align:center; margin-bottom:12px; }
+.login-box input:focus { border-color:#0d9488; outline:none; }
+.login-box .hint { font-size:11px; color:#999; margin-top:8px; }
+
+.header { background:linear-gradient(135deg,#0d9488,#0f766e); color:#fff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; }
+.header h1 { font-size:18px; }
+.btn { padding:8px 16px; border-radius:6px; border:none; font-size:13px; font-weight:600; cursor:pointer; }
+.btn:active { opacity:.8; }
+.btn-white { background:#fff; color:#0d9488; }
+.btn-outline { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.5); }
+.btn-red { background:#e53935; color:#fff; }
+.btn-green { background:#0d9488; color:#fff; }
+
+.container { max-width:800px; margin:0 auto; padding:16px; }
+.product-admin-card { background:#fff; border-radius:10px; padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.product-admin-card img { width:60px; height:60px; border-radius:8px; object-fit:cover; background:#e0e0e0; flex-shrink:0; }
+.product-admin-card .info { flex:1; min-width:0; }
+.product-admin-card .name { font-size:14px; font-weight:600; }
+.product-admin-card .meta { font-size:11px; color:#999; margin-top:2px; }
+.product-admin-card .price { font-size:15px; font-weight:700; color:#e53935; }
+.product-admin-card .btns { display:flex; gap:4px; flex-shrink:0; }
+.product-admin-card .btns button { padding:6px 12px; border-radius:4px; border:1px solid #ddd; background:#fff; font-size:12px; cursor:pointer; }
+.product-admin-card .btns button:active { background:#f0f0f0; }
+.product-admin-card .btns .del { color:#e53935; border-color:#e53935; }
+
+.modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:1000; overflow-y:auto; }
+.modal.show { display:flex; align-items:flex-start; justify-content:center; padding:20px; }
+.modal-content { background:#fff; border-radius:12px; width:100%; max-width:640px; padding:20px; margin-top:20px; margin-bottom:40px; }
+.modal-content h2 { font-size:18px; margin-bottom:16px; }
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:12px; font-weight:700; color:#555; margin-bottom:4px; }
+.form-group input, .form-group textarea, .form-group select { width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; font-family:inherit; }
+.form-group textarea { height:60px; font-size:12px; resize:vertical; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:#0d9488; outline:none; }
+.form-row { display:flex; gap:10px; }
+.form-row .form-group { flex:1; }
+.form-actions { display:flex; gap:10px; margin-top:16px; justify-content:flex-end; }
+.help-text { font-size:11px; color:#999; margin-top:4px; }
+
+/* Dynamic list sections */
+.list-section { background:#f8fafb; border-radius:8px; padding:12px; margin-bottom:8px; border:1px solid #e8edf2; }
+.list-section .section-label { font-size:13px; font-weight:600; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+.list-item { background:#fff; border:1px solid #e8edf2; border-radius:8px; padding:10px; margin-bottom:6px; position:relative; }
+.list-item .row { display:flex; gap:8px; align-items:flex-end; }
+.list-item .row .field { flex:1; }
+.list-item .row .field.short { flex:0 0 120px; }
+.list-item .row .field.xshort { flex:0 0 80px; }
+.list-item .field label { font-size:11px; margin-bottom:2px; color:#888; font-weight:500; }
+.list-item .field input { width:100%; padding:8px; border:1px solid #e0e0e0; border-radius:4px; font-size:13px; font-family:inherit; }
+.list-item .field input:focus { border-color:#0d9488; outline:none; }
+.list-item .del-btn { position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%; border:none; background:#fee; color:#e53935; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; }
+.list-item .del-btn:active { background:#fcc; }
+.add-btn { font-size:12px; padding:6px 12px; border-radius:4px; border:1px dashed #0d9488; background:#f0fdfa; color:#0d9488; cursor:pointer; width:100%; }
+.add-btn:active { background:#c8f0e8; }
+.empty-state { text-align:center; padding:40px; color:#999; }
+.toast { position:fixed; top:16px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 24px; border-radius:20px; font-size:14px; z-index:9999; opacity:0; transition:opacity .2s; pointer-events:none; }
+.toast.show { opacity:1; }
+
+.upload-zone { border:2px dashed #ccc; border-radius:8px; padding:16px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; min-height:100px; display:flex; align-items:center; justify-content:center; }
+.upload-zone:hover, .upload-zone.drag-over { border-color:#0d9488; background:#f0fdfa; }
+.upload-placeholder { display:flex; flex-direction:column; align-items:center; gap:4px; color:#888; font-size:13px; }
+.upload-preview { position:relative; display:flex; align-items:center; justify-content:center; }
+.upload-preview img { max-height:160px; max-width:100%; border-radius:6px; }
+.clear-img { position:absolute; top:-8px; right:-8px; width:22px; height:22px; border-radius:50%; border:none; background:#e53935; color:#fff; font-size:14px; cursor:pointer; line-height:1; display:flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>🔐 管理后台</h2>
+    <p>请输入管理密码</p>
+    <input type="password" id="pwdInput" placeholder="密码" onkeydown="if(event.key==='Enter')login()">
+    <button class="btn btn-green" style="width:100%;padding:12px;" onclick="login()">进入后台</button>
+    <div class="help-text" style="margin-top:8px;">默认密码：admin123</div>
+  </div>
+</div>
+
+<div class="header">
+  <h1>📦 产品管理 (<span id="productCount">0</span>款)</h1>
+  <div class="actions">
+    <button class="btn btn-outline" onclick="exportData()">📥 导出备份</button>
+    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📤 导入</button>
+    <button class="btn btn-white" onclick="openAdd()">＋ 添加产品</button>
+  </div>
+</div>
+<input type="file" id="importFile" accept=".json,.js" style="display:none" onchange="importData(event)">
+
+<div class="container" id="productList"></div>
+
+<!-- Edit Modal -->
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <h2 id="modalTitle">添加产品</h2>
+    <input type="hidden" id="editId">
+
+    <!-- 基本信息 -->
+    <div class="form-row">
+      <div class="form-group"><label>品牌</label><input id="editBrand" placeholder="如：江铃"></div>
+      <div class="form-group"><label>能源类型</label><select id="editPowerType"><option>纯电</option><option>混动</option><option>燃油</option></select></div>
+    </div>
+    <div class="form-group"><label>车型名称</label><input id="editName" placeholder="如：江铃E路达纯电4.2米冷藏车"></div>
+    <div class="form-group">
+      <label>产品图片</label>
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-preview" id="uploadPreview" style="display:none">
+          <img id="previewImg" src="" alt="">
+          <button class="clear-img" onclick="clearImage()">×</button>
+        </div>
+        <div class="upload-placeholder" id="uploadPlaceholder">
+          <span style="font-size:28px;">📁</span>
+          <span>拖拽图片到这里，或点击选择</span>
+          <span style="font-size:11px;color:#999;">自动压缩，支持JPG/PNG/WebP</span>
+        </div>
+        <input type="file" id="imageFileInput" accept="image/*" onchange="handleImageFile(this.files[0])" style="display:none">
+      </div>
+      <input type="hidden" id="editImage" value="">
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>裸车价（元）</label><input id="editBasePrice" type="number" placeholder="228000"></div>
+      <div class="form-group"><label>销售价（元）</label><input id="editSellingPrice" type="number" placeholder="有优惠填这里，否则同裸车价"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>保险费（元）</label><input id="editInsurance" type="number" placeholder="12000"></div>
+      <div class="form-group"><label>上户费（元）</label><input id="editRegistration" type="number" placeholder="2000"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>国家补贴（元，燃油车填0）</label><input id="editSubsidy" type="number" placeholder="35000"></div>
+    </div>
+    <div class="form-group"><label>备注（可选）</label><input id="editNote" placeholder="显示在报价单底部的提示信息"></div>
+
+    <!-- 核心参数 -->
+    <div class="list-section">
+      <div class="section-label"><span>📋 核心参数</span></div>
+      <div id="specsList"></div>
+      <button class="add-btn" onclick="addSpec()">＋ 添加参数</button>
+    </div>
+
+    <!-- 厢体选项 -->
+    <div class="list-section">
+      <div class="section-label"><span>📦 厢体选项</span></div>
+      <div id="boxesList"></div>
+      <button class="add-btn" onclick="addBox()">＋ 添加厢体</button>
+    </div>
+
+    <!-- 标配冷机 -->
+    <div class="list-section">
+      <div class="section-label"><span>❄️ 标配冷机</span></div>
+      <div id="defaultACWrap">
+        <div class="row">
+          <div class="field"><label>名称</label><input id="acName" placeholder="如：华盛火星EV600"></div>
+          <div class="field" style="flex:0 0 120px"><label>温度</label><input id="acTemp" placeholder="如：最低-20℃"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 可选冷机 -->
+    <div class="list-section">
+      <div class="section-label"><span>🔄 可选冷机升级</span></div>
+      <div id="optionalACList"></div>
+      <button class="add-btn" onclick="addOptAC()">＋ 添加可选冷机</button>
+    </div>
+
+    <!-- 选装件 -->
+    <div class="list-section">
+      <div class="section-label"><span>🔧 选装件</span></div>
+      <div id="addonsList"></div>
+      <button class="add-btn" onclick="addAddon()">＋ 添加选装件</button>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" style="background:#999;color:#fff" onclick="closeModal()">取消</button>
+      <button class="btn btn-green" onclick="saveProduct()">💾 保存产品</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+const PWD = 'admin123';
+const STORAGE_KEY = 'reefer_truck_products';
+
+// ============ AUTH ============
+function login() {
+  if (document.getElementById('pwdInput').value === PWD) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    init();
+  } else { toast('密码错误'); }
+}
+
+// ============ DATA ============
+function getProducts() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) return JSON.parse(raw);
+  if (typeof PRODUCT_DATA !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCT_DATA));
+    return JSON.parse(JSON.stringify(PRODUCT_DATA));
+  }
+  return [];
+}
+
+function saveProducts(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+// ============ DYNAMIC FORM HELPERS ============
+let tempSpecs = [], tempBoxes = [], tempOptAC = [], tempAddons = [];
+
+function renderSpecs() {
+  document.getElementById('specsList').innerHTML = tempSpecs.map((s, i) => `
+    <div class="list-item">
+      <button class="del-btn" onclick="tempSpecs.splice(${i},1);renderSpecs()">×</button>
+      <div class="row">
+        <div class="field"><label>参数名</label><input value="${esc(s.k)}" onchange="tempSpecs[${i}].k=this.value"></div>
+        <div class="field"><label>参数值</label><input value="${esc(s.v)}" onchange="tempSpecs[${i}].v=this.value"></div>
+      </div>
+    </div>`).join('');
+}
+function addSpec() { tempSpecs.push({k:'',v:''}); renderSpecs(); }
+
+function renderBoxes() {
+  document.getElementById('boxesList').innerHTML = tempBoxes.map((b, i) => `
+    <div class="list-item">
+      <button class="del-btn" onclick="tempBoxes.splice(${i},1);renderBoxes()">×</button>
+      <div class="row">
+        <div class="field"><label>名称</label><input value="${esc(b.name)}" onchange="tempBoxes[${i}].name=this.value" placeholder="如：原厂箱体"></div>
+        <div class="field short"><label>加价（元）</label><input type="number" value="${b.price}" onchange="tempBoxes[${i}].price=+this.value" placeholder="标配填0"></div>
+      </div>
+      <div class="row" style="margin-top:6px"><div class="field"><label>描述</label><input value="${esc(b.desc||'')}" onchange="tempBoxes[${i}].desc=this.value" placeholder="如：玻璃钢外壁+热塑板内壁"></div></div>
+    </div>`).join('');
+}
+function addBox() { tempBoxes.push({name:'',desc:'',price:0}); renderBoxes(); }
+
+function renderOptAC() {
+  document.getElementById('optionalACList').innerHTML = tempOptAC.map((a, i) => `
+    <div class="list-item">
+      <button class="del-btn" onclick="tempOptAC.splice(${i},1);renderOptAC()">×</button>
+      <div class="row">
+        <div class="field"><label>名称</label><input value="${esc(a.name)}" onchange="tempOptAC[${i}].name=this.value" placeholder="如：升级开利冷机"></div>
+        <div class="field short"><label>加价（元）</label><input type="number" value="${a.price}" onchange="tempOptAC[${i}].price=+this.value"></div>
+      </div>
+    </div>`).join('');
+}
+function addOptAC() { tempOptAC.push({name:'',price:0}); renderOptAC(); }
+
+function renderAddons() {
+  document.getElementById('addonsList').innerHTML = tempAddons.map((a, i) => `
+    <div class="list-item">
+      <button class="del-btn" onclick="tempAddons.splice(${i},1);renderAddons()">×</button>
+      <div class="row">
+        <div class="field"><label>名称</label><input value="${esc(a.name)}" onchange="tempAddons[${i}].name=this.value" placeholder="如：铝合金尾板(1.5T)"></div>
+        <div class="field short"><label>价格（元）</label><input type="number" value="${a.price}" onchange="tempAddons[${i}].price=+this.value"></div>
+      </div>
+    </div>`).join('');
+}
+function addAddon() { tempAddons.push({name:'',price:0}); renderAddons(); }
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ============ RENDER LIST ============
+// ============ IMAGE UPLOAD ============
+let currentImageData = '';
+
+function initUploadZone() {
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('click', () => document.getElementById('imageFileInput').click());
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) handleImageFile(file);
+  });
+}
+
+function handleImageFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const maxW = 800, maxH = 600;
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = h * maxW / w; w = maxW; }
+      if (h > maxH) { w = w * maxH / h; h = maxH; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      currentImageData = canvas.toDataURL('image/jpeg', 0.75);
+      document.getElementById('editImage').value = currentImageData;
+      document.getElementById('previewImg').src = currentImageData;
+      document.getElementById('uploadPreview').style.display = 'flex';
+      document.getElementById('uploadPlaceholder').style.display = 'none';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setImagePreview(src) {
+  if (!src) return;
+  currentImageData = src;
+  document.getElementById('editImage').value = src;
+  document.getElementById('previewImg').src = src;
+  document.getElementById('uploadPreview').style.display = 'flex';
+  document.getElementById('uploadPlaceholder').style.display = 'none';
+}
+
+function clearImage() {
+  currentImageData = '';
+  document.getElementById('editImage').value = '';
+  document.getElementById('previewImg').src = '';
+  document.getElementById('uploadPreview').style.display = 'none';
+  document.getElementById('uploadPlaceholder').style.display = 'flex';
+  document.getElementById('imageFileInput').value = '';
+}
+
+function init() {
+  initUploadZone();
+  renderList();
+}
+function renderList() {
+  const products = getProducts();
+  document.getElementById('productCount').textContent = products.length;
+  const container = document.getElementById('productList');
+  if (products.length === 0) {
+    container.innerHTML = '<div class="empty-state">暂无产品，点击右上角"＋ 添加产品"</div>';
+    return;
+  }
+  container.innerHTML = products.map((p, i) => `
+    <div class="product-admin-card">
+      <img src="${p.image || ''}" onerror="this.style.display='none'" style="${p.image?'':'display:none'}">
+      <div class="info">
+        <div class="name">${p.brand} · ${p.name}</div>
+        <div class="meta">${p.powerType} | ${Object.keys(p.specs||{}).length}项参数 | ${(p.boxes||[]).length}种厢体</div>
+      </div>
+      <div class="price">${((p.sellingPrice||p.basePrice)/10000).toFixed(2)}万</div>
+      <div class="btns">
+        <button onclick="openEdit(${i})">编辑</button>
+        <button class="del" onclick="deleteProduct(${i})">删除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ CRUD ============
+function openAdd() {
+  document.getElementById('modalTitle').textContent = '添加产品';
+  document.getElementById('editId').value = '';
+  clearBasicForm();
+  clearImage();
+  tempSpecs = []; tempBoxes = [{name:'',desc:'',price:0}]; tempOptAC = []; tempAddons = [];
+  renderSpecs(); renderBoxes(); renderOptAC(); renderAddons();
+  document.getElementById('acName').value = ''; document.getElementById('acTemp').value = '';
+  document.getElementById('editModal').classList.add('show');
+}
+
+function openEdit(index) {
+  const p = getProducts()[index];
+  document.getElementById('modalTitle').textContent = '编辑产品';
+  document.getElementById('editId').value = index;
+  document.getElementById('editBrand').value = p.brand || '';
+  document.getElementById('editName').value = p.name || '';
+  document.getElementById('editPowerType').value = p.powerType || '纯电';
+  document.getElementById('editBasePrice').value = p.basePrice || '';
+  document.getElementById('editSellingPrice').value = p.sellingPrice || p.basePrice || '';
+  // Image
+  if (p.image && p.image.length > 0) {
+    setImagePreview(p.image);
+  } else {
+    clearImage();
+  }
+  document.getElementById('editInsurance').value = (p.otherFees||{}).insurance || '';
+  document.getElementById('editRegistration').value = (p.otherFees||{}).registration || '';
+  document.getElementById('editSubsidy').value = p.subsidy ?? 0;
+  document.getElementById('editNote').value = p.note || '';
+  tempSpecs = Object.entries(p.specs||{}).map(([k,v]) => ({k,v}));
+  tempBoxes = JSON.parse(JSON.stringify(p.boxes || []));
+  tempOptAC = JSON.parse(JSON.stringify(p.optionalAC || []));
+  tempAddons = JSON.parse(JSON.stringify(p.addons || []));
+  document.getElementById('acName').value = (p.defaultAC||{}).name || '';
+  document.getElementById('acTemp').value = (p.defaultAC||{}).temp || '';
+  renderSpecs(); renderBoxes(); renderOptAC(); renderAddons();
+  document.getElementById('editModal').classList.add('show');
+}
+
+function saveProduct() {
+  try {
+    const index = document.getElementById('editId').value;
+    const specs = {};
+    tempSpecs.forEach(s => { if (s.k.trim()) specs[s.k.trim()] = s.v.trim(); });
+
+    const product = {
+      id: document.getElementById('editBrand').value.toLowerCase().replace(/\s+/g,'-') + '-' + Date.now(),
+      brand: document.getElementById('editBrand').value.trim(),
+      name: document.getElementById('editName').value.trim(),
+      image: document.getElementById('editImage').value.trim(),
+      powerType: document.getElementById('editPowerType').value,
+      basePrice: parseInt(document.getElementById('editBasePrice').value) || 0,
+      sellingPrice: parseInt(document.getElementById('editSellingPrice').value) || 0,
+      specs: specs,
+      boxes: tempBoxes.filter(b => b.name.trim()),
+      defaultAC: {
+        name: document.getElementById('acName').value.trim(),
+        price: 0,
+        temp: document.getElementById('acTemp').value.trim()
+      },
+      optionalAC: tempOptAC.filter(a => a.name.trim()),
+      addons: tempAddons.filter(a => a.name.trim()),
+      otherFees: {
+        insurance: parseInt(document.getElementById('editInsurance').value) || 0,
+        registration: parseInt(document.getElementById('editRegistration').value) || 0
+      },
+      subsidy: parseInt(document.getElementById('editSubsidy').value) || 0,
+      note: document.getElementById('editNote').value.trim()
+    };
+
+    const products = getProducts();
+    if (index === '') {
+      products.push(product);
+    } else {
+      product.id = products[parseInt(index)].id;
+      products[parseInt(index)] = product;
+    }
+    saveProducts(products);
+    closeModal();
+    renderList();
+    toast(index === '' ? '✅ 产品已添加' : '✅ 产品已更新');
+  } catch(e) {
+    toast('保存失败：' + e.message);
+  }
+}
+
+function deleteProduct(index) {
+  if (!confirm('确定删除这款产品？')) return;
+  const products = getProducts();
+  products.splice(index, 1);
+  saveProducts(products);
+  renderList();
+  toast('已删除');
+}
+
+function clearBasicForm() {
+  ['editBrand','editName','editImage','editBasePrice','editSellingPrice','editInsurance','editRegistration','editNote'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('editSubsidy').value = '35000';
+}
+function closeModal() { document.getElementById('editModal').classList.remove('show'); }
+
+// ============ IMPORT / EXPORT ============
+function exportData() {
+  const products = getProducts();
+  const content = '// 冷藏车产品数据库\n// 导出时间：' + new Date().toLocaleString() + '\n// 产品数量：' + products.length + '款\n\nconst PRODUCT_DATA = ' + JSON.stringify(products, null, 2) + ';\n';
+  const blob = new Blob([content], {type:'application/javascript'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'data.js'; a.click();
+  URL.revokeObjectURL(url);
+  toast('📥 已导出 data.js');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let text = e.target.result;
+      const match = text.match(/const\s+PRODUCT_DATA\s*=\s*([\s\S]*?);/);
+      if (match) text = match[1];
+      const data = JSON.parse(text);
+      if (!Array.isArray(data)) throw new Error('需要数组格式');
+      saveProducts(data);
+      renderList();
+      toast('✅ 已导入 ' + data.length + ' 款产品');
+    } catch(err) {
+      toast('导入失败：' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+document.getElementById('pwdInput').focus();
+</script>
+</body>
+</html>

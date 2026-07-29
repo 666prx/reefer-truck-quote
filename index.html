@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>冷藏车报价配置器</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f0f4f8; color: #1a2332; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
+.page { display:none; min-height:100vh; padding-bottom:80px; }
+.page.active { display:block; }
+.header { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); color: #fff; padding: 16px 20px; position: sticky; top:0; z-index:100; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.header h1 { font-size: 18px; font-weight: 600; display:flex; align-items:center; gap:8px; }
+.header .back { font-size:24px; cursor:pointer; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.header .back:active { background: rgba(255,255,255,.2); }
+.header .subtitle { font-size:12px; opacity:.8; margin-top:2px; }
+
+.product-list { padding: 16px; display:flex; flex-direction:column; gap:12px; }
+.product-card { background: #fff; border-radius: 12px; overflow:hidden; box-shadow: 0 1px 3px rgba(0,0,0,.08); cursor:pointer; transition: transform .15s, box-shadow .15s; }
+.product-card:active { transform: scale(.98); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.product-card .card-img { width:100%; height:180px; object-fit:cover; background:#e8edf2; display:block; }
+.product-card .card-body { padding:14px; }
+.product-card .brand-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+.product-card .brand { font-size:11px; color: #0d9488; font-weight:600; letter-spacing:1px; }
+.product-card .power-badge { font-size:10px; padding:2px 6px; border-radius:3px; font-weight:600; }
+.power-badge.electric { background:#e0f2f1; color:#0f766e; }
+.power-badge.fuel { background:#fff3e0; color:#e65100; }
+.power-badge.hybrid { background:#e8eaf6; color:#283593; }
+.product-card .name { font-size:15px; font-weight:600; margin-bottom:8px; }
+.product-card .specs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.product-card .tag { font-size:11px; background: #f0f4f8; color: #555; padding: 3px 8px; border-radius: 4px; white-space:nowrap; }
+.product-card .price-row { display:flex; justify-content:space-between; align-items:flex-end; padding-top:10px; border-top:1px solid #e8edf2; }
+.product-card .price-col { display:flex; flex-direction:column; }
+.product-card .base-price { font-size:12px; color:#999; text-decoration:line-through; }
+.product-card .sell-price { font-size:20px; font-weight:700; color: #e53935; }
+.product-card .sell-price small { font-size:12px; font-weight:400; color:#999; }
+.product-card .arrow { color: #0d9488; font-size:18px; }
+
+.filter-bar { padding:12px 16px 4px; display:flex; gap:8px; overflow-x:auto; }
+.filter-chip { font-size:12px; padding:6px 14px; border-radius:16px; border:1px solid #ccc; background:#fff; white-space:nowrap; cursor:pointer; }
+.filter-chip.active { background:#0d9488; color:#fff; border-color:#0d9488; }
+
+.config-panel { padding:16px; }
+.config-title { font-size:15px; font-weight:600; margin-bottom:12px; color:#333; }
+.option-group { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.option-item { background: #fff; border:2px solid #e8edf2; border-radius:10px; padding:14px; cursor:pointer; transition: all .15s; display:flex; justify-content:space-between; align-items:center; }
+.option-item:active { transform: scale(.98); }
+.option-item.selected { border-color: #0d9488; background: #f0fdfa; }
+.option-item .opt-name { font-size:14px; font-weight:500; }
+.option-item .opt-desc { font-size:11px; color: #999; margin-top:2px; }
+.option-item .opt-price { font-size:14px; font-weight:600; color: #e53935; white-space:nowrap; }
+.option-item .opt-price.free { color: #0d9488; }
+.opt-chip { display:flex; gap:8px; }
+.opt-left { display:flex; align-items:center; gap:8px; }
+.radio { width:22px; height:22px; border-radius:50%; border:2px solid #ccc; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .15s; }
+.selected .radio { border-color: #0d9488; background: #0d9488; }
+.selected .radio::after { content:'✓'; color:#fff; font-size:13px; font-weight:700; }
+
+.toggle-item { background: #fff; border:2px solid #e8edf2; border-radius:10px; padding:14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.toggle-item.checked { border-color: #0d9488; background: #f0fdfa; }
+.toggle-switch { width:48px; height:28px; background:#ccc; border-radius:14px; position:relative; transition:background .2s; flex-shrink:0; }
+.toggle-switch.on { background:#0d9488; }
+.toggle-switch::after { content:''; width:22px; height:22px; background:#fff; border-radius:50%; position:absolute; top:3px; left:3px; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+.toggle-switch.on::after { left:23px; }
+
+.price-bar { position:fixed; bottom:0; left:0; right:0; background:#fff; padding:12px 20px; box-shadow:0 -2px 10px rgba(0,0,0,.1); display:flex; justify-content:space-between; align-items:center; z-index:200; }
+.price-bar .total-label { font-size:12px; color:#999; }
+.price-bar .total-price { font-size:24px; font-weight:700; color:#e53935; }
+.price-bar .total-price small { font-size:12px; font-weight:400; color:#999; }
+.btn { background: linear-gradient(135deg, #0d9488, #0f766e); color:#fff; border:none; padding:12px 28px; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:opacity .15s; }
+.btn:active { opacity:.8; }
+.btn-outline { background: #fff; color: #0d9488; border:2px solid #0d9488; }
+
+.quote-card { background:#fff; margin:16px; border-radius:12px; padding:16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.quote-card h3 { font-size:16px; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid #0d9488; }
+.quote-row { display:flex; justify-content:space-between; padding:6px 0; font-size:14px; }
+.quote-row.total { font-size:18px; font-weight:700; color:#e53935; margin-top:8px; padding-top:8px; border-top:1px dashed #e0e0e0; }
+.quote-row .label { color:#666; }
+.quote-note { font-size:11px; color:#999; margin:10px 16px; padding:10px; background:#fff8e1; border-radius:8px; }
+.quote-img { width:100%; max-height:240px; object-fit:cover; border-radius:8px; margin-bottom:8px; background:#e8edf2; }
+
+.empty-state { text-align:center; padding:40px 20px; color:#999; }
+</style>
+</head>
+<body>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="header">
+    <h1>🚛 冷藏车报价配置器</h1>
+    <div class="subtitle">选车型 · 配方案 · 出报价</div>
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-chip active" data-filter="all">全部</span>
+    <span class="filter-chip" data-filter="纯电">纯电动</span>
+    <span class="filter-chip" data-filter="混动">混动</span>
+    <span class="filter-chip" data-filter="燃油">燃油</span>
+  </div>
+  <div class="product-list" id="productList"></div>
+</div>
+
+<!-- CONFIG PAGE -->
+<div class="page" id="page-config">
+  <div class="header" style="display:flex;align-items:center;gap:12px;">
+    <span class="back" onclick="goHome()">←</span>
+    <div><h1 id="configTitle">车型配置</h1></div>
+  </div>
+  <div class="config-panel" id="configPanel"></div>
+  <div class="price-bar">
+    <div><div class="total-label">预估落地价（含保险/上户/补贴）</div><div class="total-price" id="configPrice">¥0</div></div>
+    <button class="btn" onclick="showQuote()">看报价单 →</button>
+  </div>
+</div>
+
+<!-- QUOTE PAGE -->
+<div class="page" id="page-quote">
+  <div class="header" style="display:flex;align-items:center;gap:12px;">
+    <span class="back" onclick="backToConfig()">←</span>
+    <div><h1>📋 报价单</h1></div>
+  </div>
+  <div id="quoteContent"></div>
+  <div style="padding:16px;display:flex;gap:12px;">
+    <button class="btn" style="flex:1" onclick="shareQuote()">📤 分享报价单</button>
+    <button class="btn btn-outline" style="flex:1" onclick="backToConfig()">返回修改</button>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+// Load data: localStorage first (if edited via admin), then data.js
+const PRODUCTS = (function() {
+  try {
+    const stored = localStorage.getItem('reefer_truck_products');
+    if (stored) return JSON.parse(stored);
+  } catch(e) {}
+  return typeof PRODUCT_DATA !== 'undefined' ? PRODUCT_DATA : [];
+})();
+
+let currentProduct = null;
+let selectedBox = 0;
+let selectedAC = 0;
+let selectedAddons = new Set();
+let currentFilter = 'all';
+
+// ============ FORMAT ============
+function fmt(n) { return (n/10000).toFixed(2); }
+function fmtFull(n) { return '¥' + n.toLocaleString(); }
+function fmtDiff(a, b) { return a !== b ? '（优惠' + fmt(b - a) + '万）' : ''; }
+
+// ============ HOME PAGE ============
+function renderHome(filter) {
+  const list = document.getElementById('productList');
+  const filtered = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.powerType === filter);
+  list.innerHTML = filtered.map(p => {
+    const specs = Object.values(p.specs || {}).slice(0, 5);
+    const hasImage = p.image && p.image.length > 0;
+    const hasDiscount = p.sellingPrice && p.sellingPrice < p.basePrice;
+    return `
+    <div class="product-card" onclick="startConfig('${p.id}')">
+      ${hasImage ? `<img class="card-img" src="${p.image}" onerror="this.style.display='none'" loading="lazy">` : ''}
+      <div class="card-body">
+        <div class="brand-row">
+          <span class="brand">${p.brand} · ${p.powerType}</span>
+          <span class="power-badge ${p.powerType==='纯电'?'electric':p.powerType==='混动'?'hybrid':'fuel'}">${p.powerType}</span>
+        </div>
+        <div class="name">${p.name}</div>
+        <div class="specs">${specs.map(v => `<span class="tag">${v}</span>`).join('')}</div>
+        <div class="price-row">
+          <div class="price-col">
+            ${hasDiscount ? `<span class="base-price">裸车 ${fmt(p.basePrice)}万</span>` : ''}
+            <div class="sell-price">${fmt(p.sellingPrice || p.basePrice)}<small> 万</small></div>
+          </div>
+          <span class="arrow">配置 →</span>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+document.getElementById('filterBar').addEventListener('click', e => {
+  if (e.target.classList.contains('filter-chip')) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    currentFilter = e.target.dataset.filter;
+    renderHome(currentFilter);
+  }
+});
+
+// ============ CONFIG PAGE ============
+function startConfig(productId) {
+  currentProduct = PRODUCTS.find(p => p.id === productId);
+  if (!currentProduct) return;
+  selectedBox = 0;
+  selectedAC = 0;
+  selectedAddons = new Set();
+
+  showPage('page-config');
+  document.getElementById('configTitle').textContent = currentProduct.name;
+  renderConfig();
+  updatePrice();
+}
+
+function renderConfig() {
+  const p = currentProduct;
+  const panel = document.getElementById('configPanel');
+
+  let html = '<div class="config-title">📦 选择厢体</div><div class="option-group">';
+  p.boxes.forEach((box, i) => {
+    html += `
+      <div class="option-item ${selectedBox === i ? 'selected' : ''}" onclick="selectBox(${i})">
+        <div class="opt-left"><div class="radio"></div><div><div class="opt-name">${box.name}</div><div class="opt-desc">${box.desc}</div></div></div>
+        <span class="opt-price ${box.price === 0 ? 'free' : ''}">${box.price === 0 ? '标配' : '+¥' + fmt(box.price) + '万'}</span>
+      </div>`;
+  });
+  html += '</div>';
+
+  html += '<div class="config-title">❄️ 选择冷机</div><div class="option-group">';
+  html += `
+    <div class="option-item ${selectedAC === 0 ? 'selected' : ''}" onclick="selectAC(0)">
+      <div class="opt-left"><div class="radio"></div><div><div class="opt-name">${p.defaultAC.name}（标配）</div><div class="opt-desc">${p.defaultAC.temp}</div></div></div>
+      <span class="opt-price free">标配</span>
+    </div>`;
+  p.optionalAC.forEach((ac, i) => {
+    html += `
+      <div class="option-item ${selectedAC === i + 1 ? 'selected' : ''}" onclick="selectAC(${i + 1})">
+        <div class="opt-left"><div class="radio"></div><div class="opt-name">${ac.name}</div></div>
+        <span class="opt-price">+¥${fmt(ac.price)}万</span>
+      </div>`;
+  });
+  html += '</div>';
+
+  html += '<div class="config-title">🔧 选装件</div>';
+  if (p.addons.length === 0) {
+    html += '<div class="empty-state" style="padding:20px;">📭 暂无选装件</div>';
+  } else {
+    html += '<div class="option-group">';
+    p.addons.forEach((a, i) => {
+      html += `
+        <div class="toggle-item ${selectedAddons.has(i) ? 'checked' : ''}" onclick="toggleAddon(${i})">
+          <div><div class="opt-name">${a.name}</div><div class="opt-desc">+¥${fmt(a.price)}万</div></div>
+          <div class="toggle-switch ${selectedAddons.has(i) ? 'on' : ''}"></div>
+        </div>`;
+    });
+    html += '</div>';
+  }
+
+  if (p.subsidy > 0) {
+    html += '<div class="config-title">💰 国家补贴</div>';
+    html += `
+      <div class="toggle-item ${selectedAddons.has('subsidy') ? 'checked' : ''}" onclick="toggleSubsidy()">
+        <div><div class="opt-name">新能源补贴（上营运户）</div><div class="opt-desc" style="color:#e53935;">-¥${fmt(p.subsidy)}万</div></div>
+        <div class="toggle-switch ${selectedAddons.has('subsidy') ? 'on' : ''}"></div>
+      </div>`;
+  }
+
+  panel.innerHTML = html;
+}
+
+function selectBox(i) { selectedBox = i; renderConfig(); updatePrice(); }
+function selectAC(i) { selectedAC = i; renderConfig(); updatePrice(); }
+function toggleAddon(i) { selectedAddons.has(i) ? selectedAddons.delete(i) : selectedAddons.add(i); renderConfig(); updatePrice(); }
+function toggleSubsidy() { selectedAddons.has('subsidy') ? selectedAddons.delete('subsidy') : selectedAddons.add('subsidy'); renderConfig(); updatePrice(); }
+
+function calcTotal() {
+  const p = currentProduct;
+  let extra = p.boxes[selectedBox].price;
+  if (selectedAC > 0 && p.optionalAC[selectedAC - 1]) extra += p.optionalAC[selectedAC - 1].price;
+  p.addons.forEach((a, i) => { if (selectedAddons.has(i)) extra += a.price; });
+  const fees = (p.otherFees?.insurance || 0) + (p.otherFees?.registration || 0);
+  const subsidy = selectedAddons.has('subsidy') ? (p.subsidy || 0) : 0;
+  return { base: p.basePrice, extra, fees, subsidy, total: p.basePrice + extra + fees - subsidy, sellingPrice: p.sellingPrice || p.basePrice };
+}
+
+function updatePrice() {
+  const { total } = calcTotal();
+  document.getElementById('configPrice').innerHTML = fmt(total) + '<small> 万</small>';
+}
+
+// ============ QUOTE PAGE ============
+function showQuote() {
+  const p = currentProduct;
+  const { base, extra, fees, subsidy, total } = calcTotal();
+  const box = p.boxes[selectedBox];
+  const ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
+
+  let html = '';
+  if (p.image) html += `<img class="quote-img" src="${p.image}" onerror="this.style.display='none'">`;
+
+  html += `<div class="quote-card">
+    <h3>🚛 ${p.name}</h3>
+    ${Object.entries(p.specs).map(([k,v]) => `<div class="quote-row"><span class="label">${k}</span><span>${v}</span></div>`).join('')}
+  </div>`;
+
+  html += `<div class="quote-card">
+    <h3>💰 费用明细</h3>
+    <div class="quote-row"><span class="label">裸车价</span><span>${fmtFull(base)}</span></div>`;
+
+  if (box.price > 0) html += `<div class="quote-row"><span class="label">厢体：${box.name}</span><span>${fmtFull(box.price)}</span></div>`;
+  else html += `<div class="quote-row"><span class="label">厢体：${box.name}</span><span>标配</span></div>`;
+
+  html += `<div class="quote-row"><span class="label">冷机：${ac.name}</span><span>${selectedAC === 0 ? '标配' : fmtFull(ac.price)}</span></div>`;
+
+  p.addons.forEach((a, i) => {
+    if (selectedAddons.has(i)) html += `<div class="quote-row"><span class="label">＋ ${a.name}</span><span>${fmtFull(a.price)}</span></div>`;
+  });
+
+  html += `<div class="quote-row"><span class="label">＋ 保险</span><span>${fmtFull(p.otherFees?.insurance || 0)}</span></div>`;
+  html += `<div class="quote-row"><span class="label">＋ 上户费</span><span>${fmtFull(p.otherFees?.registration || 0)}</span></div>`;
+
+  if (subsidy > 0) html += `<div class="quote-row" style="color:#0d9488;"><span class="label">－ 国家补贴</span><span>-${fmtFull(subsidy)}</span></div>`;
+
+  html += `<div class="quote-row total"><span>预估落地总价</span><span>${fmtFull(total)}</span></div>
+    <div style="text-align:right;font-size:14px;color:#e53935;font-weight:500;">（${fmt(total)}万）</div>
+  </div>`;
+
+  if (p.subsidy > 0 && !subsidy) html += `<div class="quote-note">💡 国家补贴${fmt(p.subsidy)}万需办理营运户，请咨询确认申请条件。</div>`;
+  if (p.note) html += `<div class="quote-note">📌 ${p.note}</div>`;
+
+  document.getElementById('quoteContent').innerHTML = html;
+  showPage('page-quote');
+  window.scrollTo(0, 0);
+}
+
+function shareQuote() {
+  const p = currentProduct;
+  const { base, extra, fees, subsidy, total } = calcTotal();
+  const box = p.boxes[selectedBox];
+  const ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
+
+  let text = `【冷藏车报价】\n${p.name}\n`;
+  text += `裸车：${fmtFull(base)}\n`;
+  if (box.price > 0) text += `厢体升级(${box.name})：${fmtFull(box.price)}\n`;
+  if (selectedAC > 0) text += `冷机升级(${ac.name})：${fmtFull(ac.price)}\n`;
+  p.addons.forEach((a, i) => { if (selectedAddons.has(i)) text += `选装(${a.name})：${fmtFull(a.price)}\n`; });
+  text += `保险+上户：${fmtFull(fees)}\n`;
+  if (subsidy > 0) text += `国家补贴：-${fmtFull(subsidy)}\n`;
+  text += `预估落地总价：${fmtFull(total)}（${fmt(total)}万）`;
+
+  if (navigator.share) {
+    navigator.share({ title: '冷藏车报价单', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('报价单已复制到剪贴板！'));
+  }
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goHome() { showPage('page-home'); renderHome(currentFilter); }
+function backToConfig() { showPage('page-config'); renderConfig(); updatePrice(); }
+
+renderHome('all');
+</script>
+</body>
+</html>
