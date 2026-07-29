@@ -16,7 +16,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .login-box input:focus { border-color:#0d9488; outline:none; }
 .login-box .hint { font-size:11px; color:#999; margin-top:8px; }
 
-.header { background:linear-gradient(135deg,#0d9488,#0f766e); color:#fff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; }
+.header { background:linear-gradient(135deg,#0d9488,#0f766e); color:#fff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
 .header h1 { font-size:18px; }
 .btn { padding:8px 16px; border-radius:6px; border:none; font-size:13px; font-weight:600; cursor:pointer; }
 .btn:active { opacity:.8; }
@@ -51,7 +51,6 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .form-actions { display:flex; gap:10px; margin-top:16px; justify-content:flex-end; }
 .help-text { font-size:11px; color:#999; margin-top:4px; }
 
-/* Dynamic list sections */
 .list-section { background:#f8fafb; border-radius:8px; padding:12px; margin-bottom:8px; border:1px solid #e8edf2; }
 .list-section .section-label { font-size:13px; font-weight:600; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
 .list-item { background:#fff; border:1px solid #e8edf2; border-radius:8px; padding:10px; margin-bottom:6px; position:relative; }
@@ -96,19 +95,18 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     <button class="btn btn-outline" onclick="exportData()">📥 导出备份</button>
     <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📤 导入</button>
     <button class="btn btn-white" onclick="openAdd()">＋ 添加产品</button>
+    <button class="btn btn-white" id="publishBtn" onclick="publishNow()" style="background:#e53935;color:#fff;">🚀 发布上线</button>
   </div>
 </div>
 <input type="file" id="importFile" accept=".json,.js" style="display:none" onchange="importData(event)">
 
 <div class="container" id="productList"></div>
 
-<!-- Edit Modal -->
 <div class="modal" id="editModal">
   <div class="modal-content">
     <h2 id="modalTitle">添加产品</h2>
     <input type="hidden" id="editId">
 
-    <!-- 基本信息 -->
     <div class="form-row">
       <div class="form-group"><label>品牌</label><input id="editBrand" placeholder="如：江铃"></div>
       <div class="form-group"><label>能源类型</label><select id="editPowerType"><option>纯电</option><option>混动</option><option>燃油</option></select></div>
@@ -143,21 +141,18 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     </div>
     <div class="form-group"><label>备注（可选）</label><input id="editNote" placeholder="显示在报价单底部的提示信息"></div>
 
-    <!-- 核心参数 -->
     <div class="list-section">
       <div class="section-label"><span>📋 核心参数</span></div>
       <div id="specsList"></div>
       <button class="add-btn" onclick="addSpec()">＋ 添加参数</button>
     </div>
 
-    <!-- 厢体选项 -->
     <div class="list-section">
       <div class="section-label"><span>📦 厢体选项</span></div>
       <div id="boxesList"></div>
       <button class="add-btn" onclick="addBox()">＋ 添加厢体</button>
     </div>
 
-    <!-- 标配冷机 -->
     <div class="list-section">
       <div class="section-label"><span>❄️ 标配冷机</span></div>
       <div id="defaultACWrap">
@@ -168,14 +163,12 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
       </div>
     </div>
 
-    <!-- 可选冷机 -->
     <div class="list-section">
       <div class="section-label"><span>🔄 可选冷机升级</span></div>
       <div id="optionalACList"></div>
       <button class="add-btn" onclick="addOptAC()">＋ 添加可选冷机</button>
     </div>
 
-    <!-- 选装件 -->
     <div class="list-section">
       <div class="section-label"><span>🔧 选装件</span></div>
       <div id="addonsList"></div>
@@ -196,7 +189,6 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 const PWD = 'admin123';
 const STORAGE_KEY = 'reefer_truck_products';
 
-// ============ AUTH ============
 function login() {
   if (document.getElementById('pwdInput').value === PWD) {
     document.getElementById('loginOverlay').style.display = 'none';
@@ -204,7 +196,6 @@ function login() {
   } else { toast('密码错误'); }
 }
 
-// ============ DATA ============
 function getProducts() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) return JSON.parse(raw);
@@ -217,7 +208,6 @@ function getProducts() {
 
 function saveProducts(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
 
-// ============ DYNAMIC FORM HELPERS ============
 let tempSpecs = [], tempBoxes = [], tempOptAC = [], tempAddons = [];
 
 function renderSpecs() {
@@ -271,8 +261,6 @@ function addAddon() { tempAddons.push({name:'',price:0}); renderAddons(); }
 
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ============ RENDER LIST ============
-// ============ IMAGE UPLOAD ============
 let currentImageData = '';
 
 function initUploadZone() {
@@ -331,10 +319,69 @@ function clearImage() {
   document.getElementById('imageFileInput').value = '';
 }
 
-function init() {
-  initUploadZone();
-  renderList();
+// ============ GITHUB PUBLISH ============
+const REPO_OWNER = '666prx';
+const REPO_NAME = 'reefer-truck-quote';
+
+function getToken() { return localStorage.getItem('gh_token') || ''; }
+function setToken(t) { localStorage.setItem('gh_token', t); }
+
+async function pushToGitHub(products) {
+  const token = getToken();
+  if (!token) throw new Error('请先设置 GitHub Token');
+
+  const content = '// 冷藏车产品数据库\n// 自动发布\n\nconst PRODUCT_DATA = ' + JSON.stringify(products, null, 2) + ';\n';
+  const base64 = btoa(unescape(encodeURIComponent(content)));
+  const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data.js`;
+
+  let sha = null;
+  try {
+    const getRes = await fetch(apiUrl, { headers: { 'Authorization': 'token ' + token } });
+    if (getRes.ok) { const data = await getRes.json(); sha = data.sha; }
+  } catch(e) {}
+
+  const res = await fetch(apiUrl, {
+    method: 'PUT',
+    headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'Update product data', content: base64, sha: sha })
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'HTTP ' + res.status);
+  }
+  return true;
 }
+
+async function publishNow() {
+  const btn = document.getElementById('publishBtn');
+
+  if (!getToken()) {
+    const t = prompt('首次发布需要 GitHub Token（存浏览器本地，不会上传）：\n\n1. 打开 https://github.com/settings/tokens\n2. 点 Generate new token (classic)\n3. 勾选 repo 权限，生成后复制粘贴到这里\n\n请输入 Token：');
+    if (!t) return;
+    setToken(t.trim());
+  }
+
+  btn.textContent = '⏳ 发布中...';
+  btn.disabled = true;
+  try {
+    await pushToGitHub(getProducts());
+    toast('✅ 已发布上线！1-2分钟后客户扫码即可看到最新数据');
+  } catch(e) {
+    toast('❌ 发布失败：' + e.message);
+  } finally {
+    btn.textContent = '🚀 发布上线';
+    btn.disabled = false;
+  }
+}
+
+function autoPublish() {
+  if (!getToken()) return;
+  publishNow().catch(() => {});
+}
+
+function init() { initUploadZone(); renderList(); }
+
 function renderList() {
   const products = getProducts();
   document.getElementById('productCount').textContent = products.length;
@@ -359,12 +406,10 @@ function renderList() {
   `).join('');
 }
 
-// ============ CRUD ============
 function openAdd() {
   document.getElementById('modalTitle').textContent = '添加产品';
   document.getElementById('editId').value = '';
-  clearBasicForm();
-  clearImage();
+  clearBasicForm(); clearImage();
   tempSpecs = []; tempBoxes = [{name:'',desc:'',price:0}]; tempOptAC = []; tempAddons = [];
   renderSpecs(); renderBoxes(); renderOptAC(); renderAddons();
   document.getElementById('acName').value = ''; document.getElementById('acTemp').value = '';
@@ -380,12 +425,7 @@ function openEdit(index) {
   document.getElementById('editPowerType').value = p.powerType || '纯电';
   document.getElementById('editBasePrice').value = p.basePrice || '';
   document.getElementById('editSellingPrice').value = p.sellingPrice || p.basePrice || '';
-  // Image
-  if (p.image && p.image.length > 0) {
-    setImagePreview(p.image);
-  } else {
-    clearImage();
-  }
+  if (p.image && p.image.length > 0) { setImagePreview(p.image); } else { clearImage(); }
   document.getElementById('editInsurance').value = (p.otherFees||{}).insurance || '';
   document.getElementById('editRegistration').value = (p.otherFees||{}).registration || '';
   document.getElementById('editSubsidy').value = p.subsidy ?? 0;
@@ -416,35 +456,23 @@ function saveProduct() {
       sellingPrice: parseInt(document.getElementById('editSellingPrice').value) || 0,
       specs: specs,
       boxes: tempBoxes.filter(b => b.name.trim()),
-      defaultAC: {
-        name: document.getElementById('acName').value.trim(),
-        price: 0,
-        temp: document.getElementById('acTemp').value.trim()
-      },
+      defaultAC: { name: document.getElementById('acName').value.trim(), price: 0, temp: document.getElementById('acTemp').value.trim() },
       optionalAC: tempOptAC.filter(a => a.name.trim()),
       addons: tempAddons.filter(a => a.name.trim()),
-      otherFees: {
-        insurance: parseInt(document.getElementById('editInsurance').value) || 0,
-        registration: parseInt(document.getElementById('editRegistration').value) || 0
-      },
+      otherFees: { insurance: parseInt(document.getElementById('editInsurance').value) || 0, registration: parseInt(document.getElementById('editRegistration').value) || 0 },
       subsidy: parseInt(document.getElementById('editSubsidy').value) || 0,
       note: document.getElementById('editNote').value.trim()
     };
 
     const products = getProducts();
-    if (index === '') {
-      products.push(product);
-    } else {
-      product.id = products[parseInt(index)].id;
-      products[parseInt(index)] = product;
-    }
+    if (index === '') { products.push(product); }
+    else { product.id = products[parseInt(index)].id; products[parseInt(index)] = product; }
     saveProducts(products);
     closeModal();
     renderList();
     toast(index === '' ? '✅ 产品已添加' : '✅ 产品已更新');
-  } catch(e) {
-    toast('保存失败：' + e.message);
-  }
+    autoPublish();
+  } catch(e) { toast('保存失败：' + e.message); }
 }
 
 function deleteProduct(index) {
@@ -454,6 +482,7 @@ function deleteProduct(index) {
   saveProducts(products);
   renderList();
   toast('已删除');
+  autoPublish();
 }
 
 function clearBasicForm() {
@@ -462,14 +491,12 @@ function clearBasicForm() {
 }
 function closeModal() { document.getElementById('editModal').classList.remove('show'); }
 
-// ============ IMPORT / EXPORT ============
 function exportData() {
   const products = getProducts();
   const content = '// 冷藏车产品数据库\n// 导出时间：' + new Date().toLocaleString() + '\n// 产品数量：' + products.length + '款\n\nconst PRODUCT_DATA = ' + JSON.stringify(products, null, 2) + ';\n';
   const blob = new Blob([content], {type:'application/javascript'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'data.js'; a.click();
+  const a = document.createElement('a'); a.href = url; a.download = 'data.js'; a.click();
   URL.revokeObjectURL(url);
   toast('📥 已导出 data.js');
 }
@@ -488,9 +515,7 @@ function importData(event) {
       saveProducts(data);
       renderList();
       toast('✅ 已导入 ' + data.length + ' 款产品');
-    } catch(err) {
-      toast('导入失败：' + err.message);
-    }
+    } catch(err) { toast('导入失败：' + err.message); }
   };
   reader.readAsText(file);
   event.target.value = '';
