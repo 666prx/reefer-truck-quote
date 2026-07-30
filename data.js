@@ -25,6 +25,11 @@ const PRODUCT_DATA = [
         "name": "CIMC中集K2",
         "desc": "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台",
         "price": 0
+      },
+      {
+        "name": "原厂厢体",
+        "desc": "",
+        "price": -2000
       }
     ],
     "defaultAC": {
