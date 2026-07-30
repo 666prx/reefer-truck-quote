@@ -1,276 +1,118 @@
 // ============================================================
-// 冷藏车产品数据库 — 修改此文件即可更新报价器
-// 用法：复制一个产品块，修改字段值，刷新页面即可生效
-// 字段说明见下方模板
+// 冷藏车产品数据库 — 基于公司产品库（销售价，非成本价）
 // ============================================================
 
 const PRODUCT_DATA = [
-  // ==================== 模板（复制此块添加新产品）====================
-  // {
-  //   id: "unique-id",              // 唯一ID，英文无空格
-  //   brand: "品牌名",               // 品牌
-  //   name: "完整车型名称",           // 显示在主标题
-  //   image: "images/xxx.jpg",      // 产品图片路径（放在images文件夹）
-  //   powerType: "纯电",             // 纯电 / 混动 / 燃油
-  //   basePrice: 228000,            // 裸车价（元）
-  //   sellingPrice: 228000,         // 销售价/优惠价（元），没有则填 basePrice
-  //   specs: {                      // 核心参数（显示在卡片和报价单）
-  //     "电机": "博世167kW(227马力)",
-  //     "电池": "宁德时代100.46kWh",
-  //     "续航": "打冷220-240km",
-  //     "厢体容积": "18m³",
-  //     "载重": "1.1T",
-  //     "制动": "气刹",
-  //     "变速箱": "自动挡",
-  //     "质保": "8年/50万km"
-  //   },
-  //   boxes: [                      // 厢体选项（至少1个）
-  //     { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁", price: 0 }
-  //   ],
-  //   defaultAC: { name: "华盛火星EV600", price: 0, temp: "最低-20℃" },  // 标配冷机
-  //   optionalAC: [                 // 可选冷机升级（可空数组[]）
-  //     { name: "升级开利(Carrier)冷机", price: 8000 },
-  //     { name: "升级松芝冷机", price: 5000 }
-  //   ],
-  //   addons: [                     // 选装件（可空数组[]）
-  //     { name: "铝合金尾板(1.5T)", price: 14500 },
-  //     { name: "食品运输智联监控", price: 4000 }
-  //   ],
-  //   otherFees: { insurance: 12000, registration: 2000 },  // 保险+上户费
-  //   subsidy: 35000,               // 国家补贴（燃油车填0）
-  //   note: ""                      // 备注（可选，显示在报价单底部）
-  // },
-  // ================================================================
-
+  // ==================== 江铃系列 ====================
   {
-    id: "jmc-eluda",
+    id: "jmc-eluda-100",
     brand: "江铃",
-    name: "江铃E路达纯电4.2米冷藏车",
+    name: "江铃E路达纯电4.2米冷藏车 (100度)",
     image: "images/jmc-eluda.jpg",
     powerType: "纯电",
-    basePrice: 228000,
-    sellingPrice: 228000,
+    basePrice: 150000,
+    sellingPrice: 150000,
     specs: {
-      "电机": "博世167kW(227马力)",
+      "底盘": "江铃E路达宽体气刹二类底盘",
       "电池": "宁德时代100.46kWh",
-      "续航": "打冷220-240km",
-      "厢体容积": "18m³",
-      "载重": "1.1T",
-      "制动": "气刹",
+      "电机": "博世167kW(227马力)",
+      "制动": "气刹(断气刹)",
       "变速箱": "自动挡",
+      "驾驶室": "单排、电动窗、中控锁",
       "质保": "8年/50万km"
     },
     boxes: [
-      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 0 }
+      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
     ],
-    defaultAC: { name: "华盛火星EV600", price: 0, temp: "最低-20℃" },
+    defaultAC: { name: "华盛EV600 分体机", price: 0, temp: "最低-20℃" },
     optionalAC: [
-      { name: "升级开利(Carrier)冷机", price: 8000 },
-      { name: "升级松芝冷机", price: 5000 },
-      { name: "升级黑盾冷机", price: 4000 },
-      { name: "升级英维克冷机", price: 6000 }
+      { name: "升级华盛EV600MB 一体机", price: 3000 },
+      { name: "升级开利PULSOR eCool P6", price: 9000 },
+      { name: "升级松芝SE 380 新能源", price: 0 },
+      { name: "升级黑盾HE600F 一体机", price: 9000 }
     ],
     addons: [
-      { name: "铝合金尾板(1.5T)", price: 14500 },
-      { name: "食品运输智联监控(GPS/4G/温度/驾驶分析)", price: 4000 }
+      { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "铝花纹裙边", price: 1500 },
+      { name: "不锈钢裙边", price: 2000 }
     ],
     otherFees: { insurance: 12000, registration: 2000 },
     subsidy: 35000,
-    note: ""
+    note: "底盘价15万 + 厢体3.3~3.8万 + 冷机选配，全部为销售价"
   },
 
   {
-    id: "foton-38",
-    brand: "福田",
-    name: "福田智蓝纯电3.8米冷藏车",
+    id: "jmc-eluda-140",
+    brand: "江铃",
+    name: "江铃E路达纯电4.2米冷藏车 (140度)",
+    image: "images/jmc-eluda-wide.jpg",
+    powerType: "纯电",
+    basePrice: 171000,
+    sellingPrice: 171000,
+    specs: {
+      "底盘": "江铃E路达宽体气刹水冷二类底盘",
+      "电池": "宁德时代140.41kWh",
+      "电机": "博世167kW(227马力)",
+      "制动": "气刹(断气刹)",
+      "变速箱": "自动挡",
+      "驾驶室": "宽体、气囊座椅、ADAS包",
+      "质保": "8年/50万km"
+    },
+    boxes: [
+      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
+    ],
+    defaultAC: { name: "华盛EV600 分体机", price: 0, temp: "最低-20℃" },
+    optionalAC: [
+      { name: "升级华盛EV600MB 一体机", price: 3000 },
+      { name: "升级开利PULSOR eCool P6", price: 9000 },
+      { name: "升级松芝SE 380 新能源", price: 0 },
+      { name: "升级黑盾HE600F 一体机", price: 9000 }
+    ],
+    addons: [
+      { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "铝花纹裙边", price: 1500 },
+      { name: "不锈钢裙边", price: 2000 }
+    ],
+    otherFees: { insurance: 13000, registration: 2000 },
+    subsidy: 35000,
+    note: "底盘价17.1万 + 厢体3.3~3.8万 + 冷机选配，全部为销售价"
+  },
+
+  // ==================== 福田奥铃系列 ====================
+  {
+    id: "aoling-63",
+    brand: "福田奥铃",
+    name: "奥铃智蓝M卡纯电3.8米冷藏车 (63度)",
     image: "",
     powerType: "纯电",
-    basePrice: 157000,
-    sellingPrice: 157000,
+    basePrice: 102000,
+    sellingPrice: 102000,
     specs: {
-      "电机": "北汽福田100kW(135马力)",
+      "底盘": "奥铃智蓝M卡二类底盘",
       "电池": "宁德时代63.75kWh",
-      "续航": "打冷180-200km",
-      "厢体容积": "14m³",
-      "载重": "1.575T",
-      "制动": "液刹",
+      "电机": "100kW",
+      "轴距": "3300mm",
+      "制动": "液压制动",
       "变速箱": "自动挡",
       "质保": "8年/40万km"
     },
     boxes: [
-      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板", price: 0 }
+      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板", price: 32000 },
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 28000 }
     ],
-    defaultAC: { name: "华盛火星EV380", price: 0, temp: "最低-18℃" },
+    defaultAC: { name: "华盛EV300 分体机", price: 0, temp: "最低-15℃" },
     optionalAC: [
-      { name: "升级松芝冷机", price: 5000 },
-      { name: "升级英维克冷机", price: 6000 }
+      { name: "升级华盛EV400 分体机", price: 500 },
+      { name: "升级黑盾380Y", price: 0 },
+      { name: "升级松芝SE 330 新能源", price: 3500 }
     ],
     addons: [
-      { name: "食品运输智联监控(GPS/4G/温度/驾驶分析)", price: 4000 }
-    ],
-    otherFees: { insurance: 11500, registration: 2000 },
-    subsidy: 35000,
-    note: ""
-  },
-
-  {
-    id: "foton-42-100",
-    brand: "福田",
-    name: "福田智蓝纯电4.2米冷藏车(100度)",
-    image: "images/foton-42-100.jpg",
-    powerType: "纯电",
-    basePrice: 206000,
-    sellingPrice: 206000,
-    specs: {
-      "电机": "北汽福田167kW(227马力)",
-      "电池": "宁德时代100.46kWh",
-      "续航": "打冷200-220km",
-      "厢体容积": "18m³",
-      "载重": "0.99T",
-      "制动": "气刹",
-      "变速箱": "自动挡",
-      "质保": "8年/50万km"
-    },
-    boxes: [
-      { name: "原厂箱体", desc: "玻璃钢外壁+热塑板内壁", price: 0 },
-      { name: "升级CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 11000 }
-    ],
-    defaultAC: { name: "华盛火星EV600", price: 0, temp: "最低-20℃" },
-    optionalAC: [
-      { name: "升级松芝冷机", price: 5000 },
-      { name: "升级黑盾冷机", price: 4000 },
-      { name: "升级英维克冷机", price: 6000 }
-    ],
-    addons: [
-      { name: "铝合金尾板(1.5T)", price: 14500 },
-      { name: "食品运输智联监控(GPS/4G/温度/驾驶分析)", price: 4000 }
-    ],
-    otherFees: { insurance: 12000, registration: 2000 },
-    subsidy: 35000,
-    note: "原厂落地¥234,500 / 中集落地¥245,500"
-  },
-
-  {
-    id: "foton-42-120",
-    brand: "福田",
-    name: "福田智蓝纯电4.2米冷藏车(120度)",
-    image: "",
-    powerType: "纯电",
-    basePrice: 227000,
-    sellingPrice: 227000,
-    specs: {
-      "电机": "北汽福田167kW(227马力)",
-      "电池": "宁德时代120.23kWh",
-      "续航": "打冷260-280km",
-      "厢体容积": "18m³",
-      "载重": "0.99T",
-      "制动": "气刹",
-      "变速箱": "自动挡",
-      "质保": "8年/50万km"
-    },
-    boxes: [
-      { name: "原厂箱体", desc: "玻璃钢外壁+热塑板内壁", price: 0 },
-      { name: "升级CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 10300 }
-    ],
-    defaultAC: { name: "华盛火星EV600", price: 0, temp: "最低-20℃" },
-    optionalAC: [
-      { name: "升级松芝冷机", price: 5000 },
-      { name: "升级黑盾冷机", price: 4000 },
-      { name: "升级英维克冷机", price: 6000 }
-    ],
-    addons: [
-      { name: "铝合金尾板(1.5T)", price: 14500 },
-      { name: "食品运输智联监控(GPS/4G/温度/驾驶分析)", price: 4000 }
-    ],
-    otherFees: { insurance: 12000, registration: 2000 },
-    subsidy: 35000,
-    note: "原厂落地¥255,500 / 中集落地¥265,800"
-  },
-
-  {
-    id: "foton-ouhang",
-    brand: "福田",
-    name: "福田欧航6.8米燃油冷藏车",
-    image: "",
-    powerType: "燃油",
-    basePrice: 256800,
-    sellingPrice: 256800,
-    specs: {
-      "发动机": "福康F4.5NS6B240A 4.5L 240马力",
-      "变速箱": "8挡法士特手动",
-      "厢体容积": "38.5m³",
-      "载重": "9.9T",
-      "燃料": "柴油国VI",
-      "油箱": "300L铝合金",
-      "制动": "前后鼓式",
-      "轮胎": "11R22.5 18PR"
-    },
-    boxes: [
-      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，可选不锈钢地板", price: 0 }
-    ],
-    defaultAC: { name: "开利1100分体式", price: 0, temp: "标配冷机" },
-    optionalAC: [],
-    addons: [],
-    otherFees: { insurance: 16000, registration: 3000 },
-    subsidy: 0,
-    note: ""
-  },
-
-  {
-    id: "foton-hybrid",
-    brand: "福田",
-    name: "福田欧马可智蓝插电混动4.2米",
-    image: "",
-    powerType: "混动",
-    basePrice: 217800,
-    sellingPrice: 217800,
-    specs: {
-      "发动机": "欧康2.5L 158马力",
-      "电机": "福田FTTBP070A 98马力",
-      "综合马力": "256匹",
-      "电池": "盟固利锰酸锂14kWh",
-      "续航": "油电混合长续航",
-      "厢体容积": "18m³",
-      "载重": "1.02T",
-      "变速箱": "自动挡",
-      "制动": "气刹"
-    },
-    boxes: [
-      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，正压灌注式发泡", price: 0 }
-    ],
-    defaultAC: { name: "松芝EV490分体式", price: 0, temp: "最低-18℃" },
-    optionalAC: [],
-    addons: [],
-    otherFees: { insurance: 12000, registration: 2000 },
-    subsidy: 35000,
-    note: "国家补贴35,000元需确认混动是否适用"
-  },
-
-  {
-    id: "yihui-v02",
-    brand: "翼晖",
-    name: "翼晖V02纯电3.2米冷藏车",
-    image: "",
-    powerType: "纯电",
-    basePrice: 108000,
-    sellingPrice: 108000,
-    specs: {
-      "电机": "远程智芯60kW(82马力)",
-      "电池": "智芯46.08kWh",
-      "续航": "打冷180-200km",
-      "厢体容积": "9m³",
-      "载重": "1.13T",
-      "制动": "液刹(前盘后鼓)",
-      "充电": "快充≈40分钟",
-      "质保": "6年/30万km"
-    },
-    boxes: [
-      { name: "重庆原厂箱体", desc: "外壁玻璃钢+内壁热塑板", price: 0 }
-    ],
-    defaultAC: { name: "黑盾HE380", price: 0, temp: "最低-18℃" },
-    optionalAC: [],
-    addons: [
-      { name: "食品运输智联监控(GPS/4G/温度/驾驶分析)", price: 4000 }
+      { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
+      { name: "GPS/4G温度监控", price: 4000 }
     ],
     otherFees: { insurance: 11000, registration: 2000 },
     subsidy: 35000,
@@ -278,32 +120,180 @@ const PRODUCT_DATA = [
   },
 
   {
-    id: "yihui-v01",
-    brand: "翼晖",
-    name: "翼晖面包V01纯电2.5米冷藏车",
-    image: "",
+    id: "aoling-100",
+    brand: "福田奥铃",
+    name: "奥铃智蓝纯电4.2米冷藏车 (100度)",
+    image: "images/foton-42-100.jpg",
     powerType: "纯电",
-    basePrice: 123500,
-    sellingPrice: 123500,
+    basePrice: 162000,
+    sellingPrice: 162000,
     specs: {
-      "电机": "远程智芯60kW(81马力)",
-      "电池": "国轩41.93kWh",
-      "续航": "打冷180-200km",
-      "厢体容积": "5m³",
-      "载重": "1.095T",
-      "充电": "快充≈40分钟",
-      "质保": "6年/30万km"
+      "底盘": "奥铃100.46度多片簧二类底盘",
+      "电池": "宁德时代100.46kWh",
+      "电机": "167kW",
+      "制动": "前盘后楔式制动",
+      "变速箱": "自动挡",
+      "驾驶室": "气囊座椅、铝合金储气筒",
+      "质保": "8年/50万km"
     },
     boxes: [
-      { name: "重庆原厂箱体", desc: "面包式一体车厢", price: 0 }
+      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
     ],
-    defaultAC: { name: "黑盾HE380", price: 0, temp: "最低-18℃" },
-    optionalAC: [],
+    defaultAC: { name: "华盛EV600 分体机", price: 0, temp: "最低-20℃" },
+    optionalAC: [
+      { name: "升级华盛EV600MB 一体机", price: 3000 },
+      { name: "升级开利PULSOR eCool P6", price: 9000 },
+      { name: "升级松芝SE 380 新能源", price: 0 },
+      { name: "升级黑盾HE600F 一体机", price: 9000 }
+    ],
     addons: [
-      { name: "食品运输智联监控(GPS/4G/温度/驾驶分析)", price: 4000 }
+      { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "铝花纹裙边", price: 1500 },
+      { name: "不锈钢裙边", price: 2000 }
     ],
-    otherFees: { insurance: 11500, registration: 2000 },
+    otherFees: { insurance: 12000, registration: 2000 },
     subsidy: 35000,
-    note: ""
+    note: "底盘价16.2万 + 厢体3.3~3.8万 + 冷机选配，全部为销售价"
+  },
+
+  // ==================== 福田祥菱系列 ====================
+  {
+    id: "xiangling-q-ev",
+    brand: "福田祥菱",
+    name: "祥菱Q新能源纯电3.2米冷藏车",
+    image: "",
+    powerType: "纯电",
+    basePrice: 85000,
+    sellingPrice: 85000,
+    specs: {
+      "底盘": "祥菱Q新能源底盘+厢体",
+      "电池": "宁德时代41.86kWh",
+      "货箱": "3050×1630×1670mm",
+      "外尺寸": "5365×1835×2675mm",
+      "制动": "AEBS",
+      "质保": "8年/40万km"
+    },
+    boxes: [
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁，含底盘", price: 0 }
+    ],
+    defaultAC: { name: "黑盾380Y", price: 0, temp: "最低-18℃" },
+    optionalAC: [
+      { name: "升级华盛EV300 分体机", price: 500 },
+      { name: "升级黑盾460Y", price: 6000 },
+      { name: "升级松芝SE 330 新能源", price: 4000 }
+    ],
+    addons: [
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "隔温板", price: 1000 }
+    ],
+    otherFees: { insurance: 10000, registration: 2000 },
+    subsidy: 35000,
+    note: "底盘+厢体整车价，不含冷机"
+  },
+
+  {
+    id: "xiangling-m1",
+    brand: "福田祥菱",
+    name: "祥菱M1汽油3.2米冷藏车",
+    image: "",
+    powerType: "燃油",
+    basePrice: 65000,
+    sellingPrice: 65000,
+    specs: {
+      "底盘": "祥菱M1底盘+厢体",
+      "发动机": "DAM16KL 1.6L 122马力",
+      "货箱": "3120×1620×1560mm",
+      "外尺寸": "5070×1780×2490mm",
+      "变速箱": "手动挡",
+      "配置": "空调、倒车影像、中控、电动窗"
+    },
+    boxes: [
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁，含底盘", price: 0 }
+    ],
+    defaultAC: { name: "松芝X1 制冷机组", price: 0, temp: "最低-15℃" },
+    optionalAC: [
+      { name: "升级松芝X3 制冷机组", price: 500 },
+      { name: "升级松芝X5-S 制冷机组", price: 4500 }
+    ],
+    addons: [
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "隔温板", price: 1000 }
+    ],
+    otherFees: { insurance: 9000, registration: 2000 },
+    subsidy: 0,
+    note: "汽油冷藏车，不含国家新能源补贴"
+  },
+
+  // ==================== 奥铃燃油系列 ====================
+  {
+    id: "aoling-qingchun",
+    brand: "福田奥铃",
+    name: "奥铃青春版燃油4.2米冷藏车",
+    image: "",
+    powerType: "燃油",
+    basePrice: 80000,
+    sellingPrice: 80000,
+    specs: {
+      "底盘": "奥铃青春版 6T 二类底盘",
+      "发动机": "YN25AL 2.5L",
+      "轴距": "3360mm",
+      "变速箱": "手动挡",
+      "制动": "气刹",
+      "载重": "6T"
+    },
+    boxes: [
+      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁", price: 38000 },
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
+    ],
+    defaultAC: { name: "松芝X1 制冷机组", price: 0, temp: "最低-15℃" },
+    optionalAC: [
+      { name: "升级松芝X3 制冷机组", price: 500 },
+      { name: "升级松芝X5-S 制冷机组", price: 4500 },
+      { name: "升级松芝EX580", price: 9500 }
+    ],
+    addons: [
+      { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "铝花纹裙边", price: 1500 },
+      { name: "不锈钢裙边", price: 2000 }
+    ],
+    otherFees: { insurance: 10000, registration: 2500 },
+    subsidy: 0,
+    note: "燃油车，不含国家新能源补贴"
+  },
+
+  {
+    id: "aoling-vka",
+    brand: "福田奥铃",
+    name: "奥铃V卡燃油3.8米冷藏车",
+    image: "",
+    powerType: "燃油",
+    basePrice: 75000,
+    sellingPrice: 75000,
+    specs: {
+      "底盘": "奥铃V卡 二类底盘",
+      "发动机": "Q23A 2.3L",
+      "轴距": "2900mm",
+      "变速箱": "手动挡",
+      "货箱": "3.8米"
+    },
+    boxes: [
+      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板", price: 30000 },
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 26000 }
+    ],
+    defaultAC: { name: "松芝X1 制冷机组", price: 0, temp: "最低-15℃" },
+    optionalAC: [
+      { name: "升级松芝X3 制冷机组", price: 500 },
+      { name: "升级松芝X5-S 制冷机组", price: 4500 }
+    ],
+    addons: [
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "隔温板", price: 1000 }
+    ],
+    otherFees: { insurance: 9000, registration: 2000 },
+    subsidy: 0,
+    note: "燃油车，不含国家新能源补贴"
   }
 ];
