@@ -4,256 +4,362 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>冷藏车报价配置器</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: { DEFAULT: '#00856A', light: '#00B96B', bg: '#F0FDF6', border: '#A7F3D0' }
+      }
+    }
+  }
+}
+</script>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f0f4f8; color: #1a2332; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
-.page { display:none; min-height:100vh; padding-bottom:80px; }
-.page.active { display:block; }
-.header { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); color: #fff; padding: 16px 20px; position: sticky; top:0; z-index:100; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
-.header h1 { font-size: 18px; font-weight: 600; display:flex; align-items:center; gap:8px; }
-.header .back { font-size:24px; cursor:pointer; width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
-.header .back:active { background: rgba(255,255,255,.2); }
-.header .subtitle { font-size:12px; opacity:.8; margin-top:2px; }
-
-.product-list { padding: 16px; display:flex; flex-direction:column; gap:12px; }
-.product-card { background: #fff; border-radius: 12px; overflow:hidden; box-shadow: 0 1px 3px rgba(0,0,0,.08); cursor:pointer; transition: transform .15s, box-shadow .15s; }
-.product-card:active { transform: scale(.98); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
-.product-card .card-img { width:100%; height:180px; object-fit:cover; background:#e8edf2; display:block; }
-.product-card .card-body { padding:14px; }
-.product-card .brand-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
-.product-card .brand { font-size:11px; color: #0d9488; font-weight:600; letter-spacing:1px; }
-.product-card .power-badge { font-size:10px; padding:2px 6px; border-radius:3px; font-weight:600; }
-.power-badge.electric { background:#e0f2f1; color:#0f766e; }
-.power-badge.fuel { background:#fff3e0; color:#e65100; }
-.power-badge.hybrid { background:#e8eaf6; color:#283593; }
-.product-card .name { font-size:15px; font-weight:600; margin-bottom:8px; }
-.product-card .specs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
-.product-card .tag { font-size:11px; background: #f0f4f8; color: #555; padding: 3px 8px; border-radius: 4px; white-space:nowrap; }
-.product-card .price-row { display:flex; justify-content:space-between; align-items:flex-end; padding-top:10px; border-top:1px solid #e8edf2; }
-.product-card .price-col { display:flex; flex-direction:column; }
-.product-card .base-price { font-size:12px; color:#999; text-decoration:line-through; }
-.product-card .sell-price { font-size:20px; font-weight:700; color: #e53935; }
-.product-card .sell-price small { font-size:12px; font-weight:400; color:#999; }
-.product-card .arrow { color: #0d9488; font-size:18px; }
-
-.filter-bar { padding:12px 16px 4px; display:flex; gap:8px; overflow-x:auto; }
-.filter-chip { font-size:12px; padding:6px 14px; border-radius:16px; border:1px solid #ccc; background:#fff; white-space:nowrap; cursor:pointer; }
-.filter-chip.active { background:#0d9488; color:#fff; border-color:#0d9488; }
-
-.config-panel { padding:16px; }
-.config-title { font-size:15px; font-weight:600; margin-bottom:12px; color:#333; }
-.option-group { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
-.option-item { background: #fff; border:2px solid #e8edf2; border-radius:10px; padding:14px; cursor:pointer; transition: all .15s; display:flex; justify-content:space-between; align-items:center; }
-.option-item:active { transform: scale(.98); }
-.option-item.selected { border-color: #0d9488; background: #f0fdfa; }
-.option-item .opt-name { font-size:14px; font-weight:500; }
-.option-item .opt-desc { font-size:11px; color: #999; margin-top:2px; }
-.option-item .opt-price { font-size:14px; font-weight:600; color: #e53935; white-space:nowrap; }
-.option-item .opt-price.free { color: #0d9488; }
-.opt-chip { display:flex; gap:8px; }
-.opt-left { display:flex; align-items:center; gap:8px; }
-.radio { width:22px; height:22px; border-radius:50%; border:2px solid #ccc; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .15s; }
-.selected .radio { border-color: #0d9488; background: #0d9488; }
-.selected .radio::after { content:'✓'; color:#fff; font-size:13px; font-weight:700; }
-
-.toggle-item { background: #fff; border:2px solid #e8edf2; border-radius:10px; padding:14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.toggle-item.checked { border-color: #0d9488; background: #f0fdfa; }
-.toggle-switch { width:48px; height:28px; background:#ccc; border-radius:14px; position:relative; transition:background .2s; flex-shrink:0; }
-.toggle-switch.on { background:#0d9488; }
-.toggle-switch::after { content:''; width:22px; height:22px; background:#fff; border-radius:50%; position:absolute; top:3px; left:3px; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
-.toggle-switch.on::after { left:23px; }
-
-.price-bar { position:fixed; bottom:0; left:0; right:0; background:#fff; padding:12px 20px; box-shadow:0 -2px 10px rgba(0,0,0,.1); display:flex; justify-content:space-between; align-items:center; z-index:200; }
-.price-bar .total-label { font-size:12px; color:#999; }
-.price-bar .total-price { font-size:24px; font-weight:700; color:#e53935; }
-.price-bar .total-price small { font-size:12px; font-weight:400; color:#999; }
-.btn { background: linear-gradient(135deg, #0d9488, #0f766e); color:#fff; border:none; padding:12px 28px; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; transition:opacity .15s; }
-.btn:active { opacity:.8; }
-.btn-outline { background: #fff; color: #0d9488; border:2px solid #0d9488; }
-
-.quote-card { background:#fff; margin:16px; border-radius:12px; padding:16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-.quote-card h3 { font-size:16px; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid #0d9488; }
-.quote-row { display:flex; justify-content:space-between; padding:6px 0; font-size:14px; }
-.quote-row.total { font-size:18px; font-weight:700; color:#e53935; margin-top:8px; padding-top:8px; border-top:1px dashed #e0e0e0; }
-.quote-row .label { color:#666; }
-.quote-note { font-size:11px; color:#999; margin:10px 16px; padding:10px; background:#fff8e1; border-radius:8px; }
-.quote-img { width:100%; max-height:240px; object-fit:cover; border-radius:8px; margin-bottom:8px; background:#e8edf2; }
-
-.empty-state { text-align:center; padding:40px 20px; color:#999; }
+* { -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+.sh-card { box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04); }
+.sh-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04); transform: translateY(-2px); }
+.trans-card { transition: all .2s ease; }
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.step-dot { transition: all .3s ease; }
+.step-dot.done { background: #00B96B; }
+.step-dot.active { background: #00856A; box-shadow: 0 0 0 4px rgba(0,133,106,.15); }
+.radio-check { transition: all .15s ease; }
+.selected-card .radio-check { border-color: #00856A !important; background: #00856A !important; }
+.vehicle-img { min-height: 160px; object-fit: cover; background: linear-gradient(135deg,#e5e7eb,#d1d5db); }
+@media (min-width: 768px) { .vehicle-img { min-height: 200px; } }
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+}
 </style>
 </head>
-<body>
+<body class="bg-[#F7F8FA] text-[#111827]">
 
-<!-- HOME PAGE -->
+<!-- ==================== PAGE 1: VEHICLE SELECTION ==================== -->
 <div class="page active" id="page-home">
-  <div class="header">
-    <h1>🚛 冷藏车报价配置器</h1>
-    <div class="subtitle">选车型 · 配方案 · 出报价</div>
+  <!-- Header -->
+  <div class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+    <div class="max-w-[1280px] mx-auto px-4 h-14 flex items-center gap-3">
+      <span class="text-2xl">🚛</span>
+      <div class="flex-1">
+        <h1 class="text-base font-semibold">冷藏车报价配置器</h1>
+        <p class="text-xs text-gray-400">选车型 · 配方案 · 出报价</p>
+      </div>
+      <a href="admin.html" class="text-xs text-gray-400 hover:text-brand transition-colors flex items-center gap-1 flex-shrink-0"><i class="fa-solid fa-gear"></i><span class="hidden sm:inline">管理</span></a>
+    </div>
   </div>
-  <div class="filter-bar" id="filterBar">
-    <span class="filter-chip active" data-filter="all">全部</span>
-    <span class="filter-chip" data-filter="纯电">纯电动</span>
-    <span class="filter-chip" data-filter="混动">混动</span>
-    <span class="filter-chip" data-filter="燃油">燃油</span>
+
+  <!-- Search + Filter -->
+  <div class="max-w-[1280px] mx-auto px-4 pt-4">
+    <div class="flex items-center gap-3 mb-3">
+      <!-- Tabs -->
+      <div class="flex gap-1.5 overflow-x-auto flex-1" id="filterBar">
+        <button class="filter-chip whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all bg-brand text-white" data-filter="all">全部</button>
+        <button class="filter-chip whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all bg-white text-gray-500 border border-gray-200 hover:border-brand-light hover:text-brand" data-filter="纯电">⚡ 纯电动</button>
+        <button class="filter-chip whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all bg-white text-gray-500 border border-gray-200 hover:border-brand-light hover:text-brand" data-filter="混动">🔌 混动</button>
+        <button class="filter-chip whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all bg-white text-gray-500 border border-gray-200 hover:border-brand-light hover:text-brand" data-filter="燃油">⛽ 燃油</button>
+      </div>
+      <!-- Search -->
+      <div class="relative flex-shrink-0 w-48 hidden sm:block">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+        <input type="text" id="searchInput" placeholder="搜索车型..." oninput="onSearch()"
+          class="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-200 text-sm focus:border-brand focus:ring-2 focus:ring-brand/10 outline-none transition-all">
+      </div>
+    </div>
+    <!-- Mobile search -->
+    <div class="sm:hidden mb-3 relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+      <input type="text" id="searchInputM" placeholder="搜索车型..." oninput="syncSearch(this)"
+        class="w-full h-10 pl-9 pr-3 rounded-lg border border-gray-200 text-sm focus:border-brand focus:ring-2 focus:ring-brand/10 outline-none transition-all">
+    </div>
+    <p class="text-xs text-gray-400 mb-3" id="productCount"></p>
   </div>
-  <div class="product-list" id="productList"></div>
+
+  <!-- Vehicle Cards -->
+  <div class="max-w-[1280px] mx-auto px-4 pb-8" id="productList"></div>
 </div>
 
-<!-- CONFIG PAGE -->
+<!-- ==================== PAGE 2: CONFIGURATION ==================== -->
 <div class="page" id="page-config">
-  <div class="header" style="display:flex;align-items:center;gap:12px;">
-    <span class="back" onclick="goHome()">←</span>
-    <div><h1 id="configTitle">车型配置</h1></div>
+  <!-- Step Progress Bar -->
+  <div class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+    <div class="max-w-[1280px] mx-auto px-4 h-14 flex items-center justify-between">
+      <button onclick="goHome()" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-brand transition-colors">
+        <i class="fa-solid fa-arrow-left text-xs"></i> 返回车型列表
+      </button>
+      <div class="flex items-center gap-3 text-sm">
+        <div class="flex items-center gap-1.5">
+          <span class="step-dot active w-2.5 h-2.5 rounded-full inline-block" id="sd1"></span>
+          <span class="font-semibold text-brand">1. 选择配置</span>
+        </div>
+        <i class="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+        <div class="flex items-center gap-1.5">
+          <span class="step-dot w-2.5 h-2.5 rounded-full inline-block bg-gray-300" id="sd2"></span>
+          <span class="text-gray-400">2. 确认报价</span>
+        </div>
+      </div>
+      <div></div>
+    </div>
   </div>
-  <div class="config-panel" id="configPanel"></div>
-  <div class="price-bar">
-    <div><div class="total-label">预估落地价（含保险/上户/补贴）</div><div class="total-price" id="configPrice">¥0</div></div>
-    <button class="btn" onclick="showQuote()">看报价单 →</button>
+
+  <div class="max-w-[1280px] mx-auto px-4 py-5 pb-28">
+    <div class="flex flex-col lg:flex-row gap-5">
+      <!-- Left: Config Options (70%) -->
+      <div class="lg:w-[70%]" id="configLeft"></div>
+
+      <!-- Right: Price Summary (30%, sticky) -->
+      <div class="lg:w-[30%]">
+        <div class="lg:sticky lg:top-20 bg-white rounded-xl sh-card p-5" id="configRight"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile bottom bar -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 sh-card px-4 py-3 z-50" style="padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px))">
+    <div class="flex items-center justify-between">
+      <div><span class="text-xs text-gray-400">预估落地价</span><div class="text-xl font-bold text-brand" id="barPrice">¥0</div></div>
+      <button onclick="showQuote()" class="bg-brand hover:bg-brand/90 text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition-all active:scale-95">下一步：查看报价 →</button>
+    </div>
   </div>
 </div>
 
-<!-- QUOTE PAGE -->
+<!-- ==================== PAGE 3: QUOTE ==================== -->
 <div class="page" id="page-quote">
-  <div class="header" style="display:flex;align-items:center;gap:12px;">
-    <span class="back" onclick="backToConfig()">←</span>
-    <div><h1>📋 报价单</h1></div>
+  <!-- Top Bar -->
+  <div class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+    <div class="max-w-[1280px] mx-auto px-4 h-14 flex items-center justify-between">
+      <button onclick="backToConfig()" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-brand transition-colors">
+        <i class="fa-solid fa-arrow-left text-xs"></i> 报价单
+      </button>
+      <div class="flex gap-2">
+        <button onclick="shareQuote()" class="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:border-brand hover:text-brand transition-all"><i class="fa-solid fa-share-nodes mr-1"></i>分享</button>
+        <button onclick="window.print()" class="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:border-brand hover:text-brand transition-all"><i class="fa-solid fa-download mr-1"></i>导出PDF</button>
+      </div>
+    </div>
   </div>
-  <div id="quoteContent"></div>
-  <div style="padding:16px;display:flex;gap:12px;">
-    <button class="btn" style="flex:1" onclick="shareQuote()">📤 分享报价单</button>
-    <button class="btn btn-outline" style="flex:1" onclick="backToConfig()">返回修改</button>
-  </div>
+
+  <div class="max-w-[1280px] mx-auto px-4 py-5 pb-12" id="quoteContent"></div>
 </div>
 
 <script src="data.js"></script>
 <script>
-// Load data: localStorage first (if edited via admin), then data.js
-const PRODUCTS = (function() {
-  try {
-    const stored = localStorage.getItem('reefer_truck_products');
-    if (stored) return JSON.parse(stored);
-  } catch(e) {}
+// ============ DATA ============
+var PRODUCTS = (function() {
+  try { var s = localStorage.getItem('reefer_truck_products'); if (s) return JSON.parse(s); } catch(e) {}
   return typeof PRODUCT_DATA !== 'undefined' ? PRODUCT_DATA : [];
 })();
 
-let currentProduct = null;
-let selectedBox = 0;
-let selectedAC = 0;
-let selectedAddons = new Set();
-let currentFilter = 'all';
+var currentProduct = null, selectedBox = 0, selectedAC = 0, selectedAddons = new Set();
+var currentFilter = 'all', searchQuery = '';
 
 // ============ FORMAT ============
 function fmt(n) { return (n/10000).toFixed(2); }
-function fmtFull(n) { return '¥' + n.toLocaleString(); }
-function fmtDiff(a, b) { return a !== b ? '（优惠' + fmt(b - a) + '万）' : ''; }
+function fmtFull(n) { return '¥' + n.toLocaleString('zh-CN'); }
 
 // ============ HOME PAGE ============
-function renderHome(filter) {
-  const list = document.getElementById('productList');
-  const filtered = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.powerType === filter);
-  list.innerHTML = filtered.map(p => {
-    const specs = Object.values(p.specs || {}).slice(0, 5);
-    const hasImage = p.image && p.image.length > 0;
-    const hasDiscount = p.sellingPrice && p.sellingPrice < p.basePrice;
-    return `
-    <div class="product-card" onclick="startConfig('${p.id}')">
-      ${hasImage ? `<img class="card-img" src="${p.image}" onerror="this.style.display='none'" loading="lazy">` : ''}
-      <div class="card-body">
-        <div class="brand-row">
-          <span class="brand">${p.brand} · ${p.powerType}</span>
-          <span class="power-badge ${p.powerType==='纯电'?'electric':p.powerType==='混动'?'hybrid':'fuel'}">${p.powerType}</span>
-        </div>
-        <div class="name">${p.name}</div>
-        <div class="specs">${specs.map(v => `<span class="tag">${v}</span>`).join('')}</div>
-        <div class="price-row">
-          <div class="price-col">
-            ${hasDiscount ? `<span class="base-price">裸车 ${fmt(p.basePrice)}万</span>` : ''}
-            <div class="sell-price">${fmt(p.sellingPrice || p.basePrice)}<small> 万</small></div>
-          </div>
-          <span class="arrow">配置 →</span>
-        </div>
-      </div>
-    </div>
-  `}).join('');
+function getFiltered() {
+  var list = PRODUCTS;
+  if (currentFilter !== 'all') list = list.filter(function(p) { return p.powerType === currentFilter; });
+  if (searchQuery) {
+    var q = searchQuery.toLowerCase();
+    list = list.filter(function(p) { return p.name.toLowerCase().indexOf(q) !== -1 || p.brand.toLowerCase().indexOf(q) !== -1; });
+  }
+  return list;
 }
 
-document.getElementById('filterBar').addEventListener('click', e => {
-  if (e.target.classList.contains('filter-chip')) {
-    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    e.target.classList.add('active');
-    currentFilter = e.target.dataset.filter;
-    renderHome(currentFilter);
+function onSearch() { searchQuery = document.getElementById('searchInput').value.trim(); renderHome(); }
+function syncSearch(el) { searchQuery = el.value.trim(); document.getElementById('searchInput').value = searchQuery; renderHome(); }
+
+var ICONS = {'电机':'⚡','发动机':'🔧','电池':'🔋','续航':'🛣️','厢体容积':'📦','载重':'🚚','制动':'🛑','变速箱':'⚙️','质保':'🛡️','综合马力':'🐎','燃料':'⛽','油箱':'🛢️','轮胎':'🔄','充电':'🔌','冷机':'❄️'};
+function sIcon(k) { return ICONS[k] || '📋'; }
+
+function getPowerClass(type) {
+  if (type === '纯电') return 'bg-emerald-50 text-emerald-700';
+  if (type === '混动') return 'bg-indigo-50 text-indigo-700';
+  return 'bg-orange-50 text-orange-700';
+}
+
+function renderHome() {
+  var filtered = getFiltered();
+  document.getElementById('productCount').textContent = '共 ' + filtered.length + ' 款车型';
+  var list = document.getElementById('productList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="text-center py-16 text-gray-400"><i class="fa-solid fa-inbox text-4xl mb-3 block"></i>没有匹配的车型</div>';
+    return;
   }
+  list.innerHTML = filtered.map(function(p) {
+    var specs = Object.entries(p.specs || {}).slice(0, 5);
+    var hasImg = p.image && p.image.length > 0;
+    var hasDiscount = p.sellingPrice && p.sellingPrice < p.basePrice;
+    return '<div class="bg-white rounded-xl sh-card trans-card cursor-pointer overflow-hidden mb-4 hover:border-brand/30 border border-transparent" onclick="startConfig(\''+p.id+'\')">' +
+      '<div class="flex flex-col sm:flex-row">' +
+        '<div class="sm:w-72 flex-shrink-0">' +
+          (hasImg ? '<img src="'+p.image+'" class="vehicle-img w-full h-full" onerror="this.parentElement.innerHTML=\'<div class=vehicle-img></div>\'" loading="lazy">'
+                  : '<div class="vehicle-img flex items-center justify-center text-6xl text-gray-300">🚛</div>') +
+        '</div>' +
+        '<div class="flex-1 p-4 flex flex-col justify-between">' +
+          '<div>' +
+            '<div class="flex items-center gap-2 mb-1">' +
+              '<span class="text-xs font-semibold text-brand uppercase tracking-wide">'+p.brand+'</span>' +
+              '<span class="text-xs px-2 py-0.5 rounded font-medium '+getPowerClass(p.powerType)+'">'+p.powerType+'</span>' +
+            '</div>' +
+            '<h3 class="text-base font-semibold mb-2.5">'+p.name+'</h3>' +
+            '<div class="flex flex-wrap gap-1.5 mb-3">' +
+              specs.map(function(s) { return '<span class="text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded-md inline-flex items-center gap-1"><span>'+sIcon(s[0])+'</span>'+s[1]+'</span>'; }).join('') +
+            '</div>' +
+          '</div>' +
+          '<div class="flex items-end justify-between pt-3 border-t border-gray-50">' +
+            '<div>' +
+              (hasDiscount ? '<p class="text-xs text-gray-400 line-through">裸车 '+fmt(p.basePrice)+'万</p>' : '<p class="text-xs text-gray-400">裸车价</p>') +
+              '<p class="text-xl font-bold text-brand">' + fmt(p.sellingPrice || p.basePrice) + '<span class="text-sm font-normal text-gray-400"> 万</span></p>' +
+            '</div>' +
+            '<span class="bg-brand hover:bg-brand/90 text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors active:scale-95 whitespace-nowrap">立即报价 →</span>' +
+          '</div>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ============ FILTER ============
+document.getElementById('filterBar').addEventListener('click', function(e) {
+  var chip = e.target.closest('.filter-chip');
+  if (!chip) return;
+  document.querySelectorAll('#filterBar .filter-chip').forEach(function(c) {
+    c.className = 'filter-chip whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all bg-white text-gray-500 border border-gray-200 hover:border-brand-light hover:text-brand';
+  });
+  chip.className = 'filter-chip whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all bg-brand text-white';
+  currentFilter = chip.dataset.filter;
+  renderHome();
 });
 
 // ============ CONFIG PAGE ============
 function startConfig(productId) {
-  currentProduct = PRODUCTS.find(p => p.id === productId);
+  currentProduct = PRODUCTS.find(function(p) { return p.id === productId; });
   if (!currentProduct) return;
-  selectedBox = 0;
-  selectedAC = 0;
-  selectedAddons = new Set();
-
+  selectedBox = 0; selectedAC = 0; selectedAddons = new Set();
   showPage('page-config');
-  document.getElementById('configTitle').textContent = currentProduct.name;
-  renderConfig();
-  updatePrice();
+  document.getElementById('sd1').className = 'step-dot active w-2.5 h-2.5 rounded-full inline-block bg-brand';
+  document.getElementById('sd2').className = 'step-dot w-2.5 h-2.5 rounded-full inline-block bg-gray-300';
+  renderConfig(); updatePrice();
+}
+
+function calcTotal() {
+  var p = currentProduct;
+  var extra = p.boxes[selectedBox].price;
+  if (selectedAC > 0 && p.optionalAC[selectedAC - 1]) extra += p.optionalAC[selectedAC - 1].price;
+  p.addons.forEach(function(a, i) { if (selectedAddons.has(i)) extra += a.price; });
+  var fees = (p.otherFees ? (p.otherFees.insurance||0)+(p.otherFees.registration||0) : 0);
+  var subsidy = selectedAddons.has('subsidy') ? (p.subsidy || 0) : 0;
+  return { base: p.basePrice, extra: extra, fees: fees, subsidy: subsidy, total: p.basePrice + extra + fees - subsidy };
 }
 
 function renderConfig() {
-  const p = currentProduct;
-  const panel = document.getElementById('configPanel');
+  var p = currentProduct, html = '';
 
-  let html = '<div class="config-title">📦 选择厢体</div><div class="option-group">';
-  p.boxes.forEach((box, i) => {
-    html += `
-      <div class="option-item ${selectedBox === i ? 'selected' : ''}" onclick="selectBox(${i})">
-        <div class="opt-left"><div class="radio"></div><div><div class="opt-name">${box.name}</div><div class="opt-desc">${box.desc}</div></div></div>
-        <span class="opt-price ${box.price === 0 ? 'free' : ''}">${box.price === 0 ? '标配' : '+¥' + fmt(box.price) + '万'}</span>
-      </div>`;
+  html += '<div class="mb-5"><h3 class="text-sm font-semibold mb-3 flex items-center gap-2"><span class="text-lg">📦</span>箱体选择</h3>';
+  p.boxes.forEach(function(box, i) {
+    var sel = selectedBox === i;
+    html += '<div class="relative bg-white border-2 rounded-xl p-4 mb-2.5 cursor-pointer trans-card '+(sel ? 'selected-card border-brand bg-brand-bg' : 'border-gray-100 hover:border-gray-200')+'" onclick="selectBox('+i+')">' +
+      (sel ? '<i class="fa-solid fa-circle-check absolute top-3 right-3 text-brand text-lg"></i>' : '') +
+      '<div class="flex items-start gap-3 pr-7"><div class="w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 radio-check '+(sel?'border-brand bg-brand':'border-gray-300')+'">'+(sel?'<i class="fa-solid fa-check text-white text-xs m-auto block text-center leading-5"></i>':'')+'</div>' +
+      '<div class="flex-1"><p class="font-medium text-sm">'+box.name+(i===0?' <span class="inline-block text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand font-semibold border border-brand-border">推荐</span>':'')+'</p>' +
+      '<p class="text-xs text-gray-400 mt-1">'+(box.desc||'')+'</p></div>' +
+      '<div class="text-right flex-shrink-0"><span class="text-sm font-semibold '+(box.price===0?'text-brand':'text-red-500')+'">'+(box.price===0?'标配':'+¥'+fmt(box.price)+'万')+'</span></div></div></div>';
   });
   html += '</div>';
 
-  html += '<div class="config-title">❄️ 选择冷机</div><div class="option-group">';
-  html += `
-    <div class="option-item ${selectedAC === 0 ? 'selected' : ''}" onclick="selectAC(0)">
-      <div class="opt-left"><div class="radio"></div><div><div class="opt-name">${p.defaultAC.name}（标配）</div><div class="opt-desc">${p.defaultAC.temp}</div></div></div>
-      <span class="opt-price free">标配</span>
-    </div>`;
-  p.optionalAC.forEach((ac, i) => {
-    html += `
-      <div class="option-item ${selectedAC === i + 1 ? 'selected' : ''}" onclick="selectAC(${i + 1})">
-        <div class="opt-left"><div class="radio"></div><div class="opt-name">${ac.name}</div></div>
-        <span class="opt-price">+¥${fmt(ac.price)}万</span>
-      </div>`;
+  html += '<div class="mb-5"><h3 class="text-sm font-semibold mb-3 flex items-center gap-2"><span class="text-lg">❄️</span>冷机选择</h3>';
+  var defSel = selectedAC === 0;
+  html += '<div class="relative bg-white border-2 rounded-xl p-4 mb-2.5 cursor-pointer trans-card '+(defSel ? 'selected-card border-brand bg-brand-bg' : 'border-gray-100 hover:border-gray-200')+'" onclick="selectAC(0)">' +
+    (defSel ? '<i class="fa-solid fa-circle-check absolute top-3 right-3 text-brand text-lg"></i>' : '') +
+    '<div class="flex items-start gap-3 pr-7"><div class="w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 radio-check '+(defSel?'border-brand bg-brand':'border-gray-300')+'">'+(defSel?'<i class="fa-solid fa-check text-white text-xs m-auto block text-center leading-5"></i>':'')+'</div>' +
+    '<div class="flex-1"><p class="font-medium text-sm">'+p.defaultAC.name+'（标配）<span class="inline-block text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand font-semibold border border-brand-border">推荐</span></p>' +
+    '<p class="text-xs text-gray-400 mt-1">'+(p.defaultAC.temp||'')+'</p></div>' +
+    '<div class="text-right flex-shrink-0"><span class="text-sm font-semibold text-brand">标配</span></div></div></div>';
+  p.optionalAC.forEach(function(ac, i) {
+    var idx = i + 1;
+    var sel = selectedAC === idx;
+    html += '<div class="relative bg-white border-2 rounded-xl p-4 mb-2.5 cursor-pointer trans-card '+(sel ? 'selected-card border-brand bg-brand-bg' : 'border-gray-100 hover:border-gray-200')+'" onclick="selectAC('+idx+')">' +
+      (sel ? '<i class="fa-solid fa-circle-check absolute top-3 right-3 text-brand text-lg"></i>' : '') +
+      '<div class="flex items-start gap-3 pr-7"><div class="w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 radio-check '+(sel?'border-brand bg-brand':'border-gray-300')+'">'+(sel?'<i class="fa-solid fa-check text-white text-xs m-auto block text-center leading-5"></i>':'')+'</div>' +
+      '<div class="flex-1"><p class="font-medium text-sm">'+ac.name+'</p></div>' +
+      '<div class="text-right flex-shrink-0"><span class="text-sm font-semibold text-red-500">+¥'+fmt(ac.price)+'万</span></div></div></div>';
   });
   html += '</div>';
 
-  html += '<div class="config-title">🔧 选装件</div>';
+  html += '<div class="mb-5"><h3 class="text-sm font-semibold mb-3 flex items-center gap-2"><span class="text-lg">🔧</span>选装配件</h3>';
   if (p.addons.length === 0) {
-    html += '<div class="empty-state" style="padding:20px;">📭 暂无选装件</div>';
+    html += '<div class="text-center py-8 text-gray-400 text-sm">暂无选装件</div>';
   } else {
-    html += '<div class="option-group">';
-    p.addons.forEach((a, i) => {
-      html += `
-        <div class="toggle-item ${selectedAddons.has(i) ? 'checked' : ''}" onclick="toggleAddon(${i})">
-          <div><div class="opt-name">${a.name}</div><div class="opt-desc">+¥${fmt(a.price)}万</div></div>
-          <div class="toggle-switch ${selectedAddons.has(i) ? 'on' : ''}"></div>
-        </div>`;
+    p.addons.forEach(function(a, i) {
+      var on = selectedAddons.has(i);
+      html += '<div class="bg-white border-2 rounded-xl p-4 mb-2.5 flex items-center justify-between gap-3 cursor-pointer trans-card '+(on ? 'selected-card border-brand bg-brand-bg' : 'border-gray-100 hover:border-gray-200')+'" onclick="toggleAddon('+i+')">' +
+        '<div class="flex-1"><p class="font-medium text-sm">'+a.name+'</p></div>' +
+        '<div class="flex items-center gap-3 flex-shrink-0">' +
+          '<span class="text-sm font-semibold text-red-500">+¥'+fmt(a.price)+'万</span>' +
+          '<div class="w-11 h-6 rounded-full relative transition-colors '+(on ? 'bg-brand' : 'bg-gray-300')+'"><div class="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform '+(on ? 'translate-x-[22px]' : 'translate-x-0.5')+'"></div></div>' +
+        '</div></div>';
     });
-    html += '</div>';
   }
+  html += '</div>';
 
   if (p.subsidy > 0) {
-    html += '<div class="config-title">💰 国家补贴</div>';
-    html += `
-      <div class="toggle-item ${selectedAddons.has('subsidy') ? 'checked' : ''}" onclick="toggleSubsidy()">
-        <div><div class="opt-name">新能源补贴（上营运户）</div><div class="opt-desc" style="color:#e53935;">-¥${fmt(p.subsidy)}万</div></div>
-        <div class="toggle-switch ${selectedAddons.has('subsidy') ? 'on' : ''}"></div>
-      </div>`;
+    var subOn = selectedAddons.has('subsidy');
+    html += '<div class="mb-5"><h3 class="text-sm font-semibold mb-3 flex items-center gap-2"><span class="text-lg">💰</span>国家补贴</h3>';
+    html += '<div class="bg-white border-2 rounded-xl p-4 flex items-center justify-between gap-3 cursor-pointer trans-card '+(subOn ? 'selected-card border-brand bg-brand-bg' : 'border-gray-100 hover:border-gray-200')+'" onclick="toggleSubsidy()">' +
+      '<div class="flex-1"><p class="font-medium text-sm">新能源营运补贴</p><p class="text-xs text-gray-400 mt-0.5">上营运户可享</p></div>' +
+      '<div class="flex items-center gap-3 flex-shrink-0">' +
+        '<span class="text-sm font-semibold text-brand">-¥'+fmt(p.subsidy)+'万</span>' +
+        '<div class="w-11 h-6 rounded-full relative transition-colors '+(subOn ? 'bg-brand' : 'bg-gray-300')+'"><div class="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform '+(subOn ? 'translate-x-[22px]' : 'translate-x-0.5')+'"></div></div>' +
+      '</div></div></div>';
   }
 
+  document.getElementById('configLeft').innerHTML = html;
+  renderPricePanel();
+}
+
+function renderPricePanel() {
+  var p = currentProduct, b = calcTotal();
+  var box = p.boxes[selectedBox];
+  var ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
+  var panel = document.getElementById('configRight');
+  var html = '<h3 class="font-semibold text-sm mb-4">💰 报价汇总</h3>';
+
+  html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">裸车价格</span><span class="font-semibold">'+fmtFull(p.basePrice)+'</span></div>';
+  html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">厢体</span><span class="font-medium">'+box.name+(box.price>0?' +'+fmtFull(box.price):' (标配)')+'</span></div>';
+  html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">冷机</span><span class="font-medium">'+ac.name+(selectedAC>0?' +'+fmtFull(ac.price):' (标配)')+'</span></div>';
+
+  p.addons.forEach(function(a,i) {
+    if (selectedAddons.has(i)) html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">'+a.name+'</span><span class="font-medium text-red-500">+'+fmtFull(a.price)+'</span></div>';
+  });
+
+  html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">保险 · 上户</span><span class="font-medium">'+fmtFull(b.fees)+'</span></div>';
+
+  if (b.subsidy > 0) {
+    html += '<div class="flex justify-between items-center py-2 text-sm text-brand"><span>国家补贴</span><span class="font-semibold">-'+fmtFull(b.subsidy)+'</span></div>';
+  }
+
+  html += '<div class="border-t-2 border-dashed border-gray-200 my-3"></div>';
+  html += '<div class="flex justify-between items-center"><span class="text-base font-semibold">预估落地总价</span><span class="text-2xl font-bold text-brand">'+fmtFull(b.total)+'</span></div>';
+  html += '<p class="text-xs text-gray-400 text-right mt-0.5">'+fmt(b.total)+'万</p>';
+
+  html += '<div class="flex flex-col gap-2 mt-4">';
+  html += '<button onclick="resetConfig()" class="w-full py-2.5 rounded-lg border-2 border-gray-200 text-gray-500 text-sm font-medium hover:border-gray-300 hover:text-gray-600 transition-all active:scale-95">清空配置</button>';
+  html += '<button onclick="showQuote()" class="w-full py-2.5 rounded-lg bg-brand hover:bg-brand/90 text-white text-sm font-semibold transition-all active:scale-95">下一步：查看报价 →</button>';
+  html += '</div>';
+
   panel.innerHTML = html;
+}
+
+function resetConfig() {
+  selectedBox = 0; selectedAC = 0; selectedAddons = new Set();
+  renderConfig(); updatePrice();
 }
 
 function selectBox(i) { selectedBox = i; renderConfig(); updatePrice(); }
@@ -261,97 +367,111 @@ function selectAC(i) { selectedAC = i; renderConfig(); updatePrice(); }
 function toggleAddon(i) { selectedAddons.has(i) ? selectedAddons.delete(i) : selectedAddons.add(i); renderConfig(); updatePrice(); }
 function toggleSubsidy() { selectedAddons.has('subsidy') ? selectedAddons.delete('subsidy') : selectedAddons.add('subsidy'); renderConfig(); updatePrice(); }
 
-function calcTotal() {
-  const p = currentProduct;
-  let extra = p.boxes[selectedBox].price;
-  if (selectedAC > 0 && p.optionalAC[selectedAC - 1]) extra += p.optionalAC[selectedAC - 1].price;
-  p.addons.forEach((a, i) => { if (selectedAddons.has(i)) extra += a.price; });
-  const fees = (p.otherFees?.insurance || 0) + (p.otherFees?.registration || 0);
-  const subsidy = selectedAddons.has('subsidy') ? (p.subsidy || 0) : 0;
-  return { base: p.basePrice, extra, fees, subsidy, total: p.basePrice + extra + fees - subsidy, sellingPrice: p.sellingPrice || p.basePrice };
-}
-
 function updatePrice() {
-  const { total } = calcTotal();
-  document.getElementById('configPrice').innerHTML = fmt(total) + '<small> 万</small>';
+  var total = fmt(calcTotal().total);
+  document.getElementById('barPrice').innerHTML = '¥' + total + '<span class="text-sm font-normal text-gray-400"> 万</span>';
 }
 
 // ============ QUOTE PAGE ============
 function showQuote() {
-  const p = currentProduct;
-  const { base, extra, fees, subsidy, total } = calcTotal();
-  const box = p.boxes[selectedBox];
-  const ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
+  if (!currentProduct) return;
+  var p = currentProduct, b = calcTotal();
+  var box = p.boxes[selectedBox];
+  var ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
+  var now = new Date();
+  var quoteNo = 'QD' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
+  var timeStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
 
-  let html = '';
-  if (p.image) html += `<img class="quote-img" src="${p.image}" onerror="this.style.display='none'">`;
+  document.getElementById('sd1').className = 'step-dot done w-2.5 h-2.5 rounded-full inline-block';
+  document.getElementById('sd1').style.background = '#00B96B';
+  document.getElementById('sd2').className = 'step-dot active w-2.5 h-2.5 rounded-full inline-block';
+  document.getElementById('sd2').style.background = '#00856A';
+  document.getElementById('sd2').style.boxShadow = '0 0 0 4px rgba(0,133,106,.15)';
 
-  html += `<div class="quote-card">
-    <h3>🚛 ${p.name}</h3>
-    ${Object.entries(p.specs).map(([k,v]) => `<div class="quote-row"><span class="label">${k}</span><span>${v}</span></div>`).join('')}
-  </div>`;
+  var html = '';
 
-  html += `<div class="quote-card">
-    <h3>💰 费用明细</h3>
-    <div class="quote-row"><span class="label">裸车价</span><span>${fmtFull(base)}</span></div>`;
-
-  if (box.price > 0) html += `<div class="quote-row"><span class="label">厢体：${box.name}</span><span>${fmtFull(box.price)}</span></div>`;
-  else html += `<div class="quote-row"><span class="label">厢体：${box.name}</span><span>标配</span></div>`;
-
-  html += `<div class="quote-row"><span class="label">冷机：${ac.name}</span><span>${selectedAC === 0 ? '标配' : fmtFull(ac.price)}</span></div>`;
-
-  p.addons.forEach((a, i) => {
-    if (selectedAddons.has(i)) html += `<div class="quote-row"><span class="label">＋ ${a.name}</span><span>${fmtFull(a.price)}</span></div>`;
+  html += '<div class="flex flex-col md:flex-row gap-5 mb-5">';
+  html += '<div class="flex-1 bg-white rounded-xl sh-card p-5">';
+  html += '<h3 class="font-semibold text-base mb-3 pb-2 border-b-2 border-brand inline-block">车辆参数</h3>';
+  html += '<div class="mt-3 space-y-1">';
+  Object.entries(p.specs||{}).forEach(function(s) {
+    html += '<div class="flex justify-between py-2 text-sm border-b border-gray-50"><span class="text-gray-500">'+s[0]+'</span><span class="font-medium">'+s[1]+'</span></div>';
   });
+  html += '</div></div>';
 
-  html += `<div class="quote-row"><span class="label">＋ 保险</span><span>${fmtFull(p.otherFees?.insurance || 0)}</span></div>`;
-  html += `<div class="quote-row"><span class="label">＋ 上户费</span><span>${fmtFull(p.otherFees?.registration || 0)}</span></div>`;
+  html += '<div class="md:w-80 flex-shrink-0 bg-white rounded-xl sh-card overflow-hidden relative">';
+  if (p.image) {
+    html += '<img src="'+p.image+'" class="w-full h-48 object-cover" onerror="this.parentElement.innerHTML=\'<div class=w-full+h-48+flex+items-center+justify-center+text-6xl+text-gray-300+bg-gray-100>🚛</div><div class=absolute+top-4+right-4+bg-brand+text-white+rounded-full+px-4+py-2+text-xs+text-center+leading-tight+shadow-lg>报价生成时间<br><span class=font-semibold>'+timeStr+'</span></div>\'">';
+  } else {
+    html += '<div class="w-full h-48 flex items-center justify-center text-6xl text-gray-300 bg-gray-100">🚛</div>';
+  }
+  html += '<div class="absolute top-4 right-4 bg-brand text-white rounded-full px-4 py-2 text-xs text-center leading-tight shadow-lg">报价生成时间<br><span class="font-semibold">'+timeStr+'</span></div>';
+  html += '<div class="p-4"><p class="text-xs text-gray-400">报价编号：'+quoteNo+'</p><p class="font-semibold mt-1">'+p.name+'</p></div>';
+  html += '</div></div>';
 
-  if (subsidy > 0) html += `<div class="quote-row" style="color:#0d9488;"><span class="label">－ 国家补贴</span><span>-${fmtFull(subsidy)}</span></div>`;
+  html += '<div class="bg-white rounded-xl sh-card overflow-hidden mb-5"><div class="p-5">';
+  html += '<h3 class="font-semibold text-base mb-3">费用明细</h3>';
+  html += '<table class="w-full text-sm"><thead><tr class="border-b-2 border-gray-100 text-left text-gray-400 text-xs uppercase tracking-wide"><th class="py-2 font-medium">项目</th><th class="py-2 font-medium text-right">金额</th></tr></thead><tbody>';
+  html += '<tr class="border-b border-gray-50"><td class="py-2.5">裸车价格</td><td class="py-2.5 text-right font-medium">'+fmtFull(p.basePrice)+'</td></tr>';
+  html += '<tr class="border-b border-gray-50"><td class="py-2.5">厢体：'+box.name+'</td><td class="py-2.5 text-right font-medium">'+(box.price>0?fmtFull(box.price):'标配')+'</td></tr>';
+  html += '<tr class="border-b border-gray-50"><td class="py-2.5">冷机：'+ac.name+'</td><td class="py-2.5 text-right font-medium">'+(selectedAC>0?fmtFull(ac.price):'标配')+'</td></tr>';
+  p.addons.forEach(function(a,i) {
+    if (selectedAddons.has(i)) html += '<tr class="border-b border-gray-50"><td class="py-2.5">'+a.name+'</td><td class="py-2.5 text-right font-medium text-red-500">+'+fmtFull(a.price)+'</td></tr>';
+  });
+  html += '<tr class="border-b border-gray-50"><td class="py-2.5">保险</td><td class="py-2.5 text-right font-medium">'+(p.otherFees?fmtFull(p.otherFees.insurance||0):'¥0')+'</td></tr>';
+  html += '<tr class="border-b border-gray-50"><td class="py-2.5">上户费</td><td class="py-2.5 text-right font-medium">'+(p.otherFees?fmtFull(p.otherFees.registration||0):'¥0')+'</td></tr>';
+  if (b.subsidy > 0) html += '<tr class="border-b border-gray-50 text-brand"><td class="py-2.5">国家补贴</td><td class="py-2.5 text-right font-semibold">-'+fmtFull(b.subsidy)+'</td></tr>';
+  html += '<tr class="bg-gray-50"><td class="py-3 font-bold text-base">落地总价</td><td class="py-3 text-right font-bold text-xl text-brand">'+fmtFull(b.total)+' <span class="text-sm font-normal text-gray-400">('+fmt(b.total)+'万)</span></td></tr>';
+  html += '</tbody></table></div></div>';
 
-  html += `<div class="quote-row total"><span>预估落地总价</span><span>${fmtFull(total)}</span></div>
-    <div style="text-align:right;font-size:14px;color:#e53935;font-weight:500;">（${fmt(total)}万）</div>
-  </div>`;
+  if (p.subsidy > 0 && !selectedAddons.has('subsidy')) {
+    html += '<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-5"><i class="fa-solid fa-circle-info mr-1"></i>国家补贴'+fmt(p.subsidy)+'万需办理营运户，请咨询销售人员确认。</div>';
+  }
+  if (p.note) {
+    html += '<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-5"><i class="fa-solid fa-circle-info mr-1"></i>'+p.note+'</div>';
+  }
 
-  if (p.subsidy > 0 && !subsidy) html += `<div class="quote-note">💡 国家补贴${fmt(p.subsidy)}万需办理营运户，请咨询确认申请条件。</div>`;
-  if (p.note) html += `<div class="quote-note">📌 ${p.note}</div>`;
+  html += '<div class="flex gap-3">';
+  html += '<button onclick="backToConfig()" class="flex-1 py-3 rounded-lg border-2 border-gray-200 text-gray-600 font-medium text-sm hover:border-gray-300 transition-all active:scale-95">← 返回修改配置</button>';
+  html += '<button onclick="shareQuote()" class="flex-1 py-3 rounded-lg bg-brand hover:bg-brand/90 text-white font-semibold text-sm transition-all active:scale-95">分享报价单给客户</button>';
+  html += '</div>';
 
   document.getElementById('quoteContent').innerHTML = html;
   showPage('page-quote');
   window.scrollTo(0, 0);
 }
 
+// ============ SHARE ============
 function shareQuote() {
-  const p = currentProduct;
-  const { base, extra, fees, subsidy, total } = calcTotal();
-  const box = p.boxes[selectedBox];
-  const ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
-
-  let text = `【冷藏车报价】\n${p.name}\n`;
-  text += `裸车：${fmtFull(base)}\n`;
-  if (box.price > 0) text += `厢体升级(${box.name})：${fmtFull(box.price)}\n`;
-  if (selectedAC > 0) text += `冷机升级(${ac.name})：${fmtFull(ac.price)}\n`;
-  p.addons.forEach((a, i) => { if (selectedAddons.has(i)) text += `选装(${a.name})：${fmtFull(a.price)}\n`; });
-  text += `保险+上户：${fmtFull(fees)}\n`;
-  if (subsidy > 0) text += `国家补贴：-${fmtFull(subsidy)}\n`;
-  text += `预估落地总价：${fmtFull(total)}（${fmt(total)}万）`;
-
-  if (navigator.share) {
-    navigator.share({ title: '冷藏车报价单', text });
-  } else {
-    navigator.clipboard.writeText(text).then(() => alert('报价单已复制到剪贴板！'));
-  }
+  var p = currentProduct, b = calcTotal();
+  var box = p.boxes[selectedBox];
+  var ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
+  var text = '【冷藏车报价单】\n'+p.name+'\n\n━━ 费用明细 ━━\n裸车：'+fmtFull(p.basePrice)+'\n厢体('+box.name+')：'+(box.price>0?fmtFull(box.price):'标配')+'\n冷机('+ac.name+')：'+(selectedAC>0?fmtFull(ac.price):'标配')+'\n';
+  p.addons.forEach(function(a,i){ if(selectedAddons.has(i)) text += a.name+'：+'+fmtFull(a.price)+'\n'; });
+  text += '保险+上户：'+fmtFull(b.fees)+'\n';
+  if(b.subsidy>0) text += '国家补贴：-'+fmtFull(b.subsidy)+'\n';
+  text += '\n✨ 预估落地总价：'+fmtFull(b.total)+'（'+fmt(b.total)+'万）';
+  if (navigator.share) { navigator.share({ title: '冷藏车报价单', text: text }); }
+  else { navigator.clipboard.writeText(text).then(function(){ alert('报价单已复制到剪贴板！'); }); }
 }
 
+// ============ NAVIGATION ============
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
-function goHome() { showPage('page-home'); renderHome(currentFilter); }
-function backToConfig() { showPage('page-config'); renderConfig(); updatePrice(); }
+function goHome() { showPage('page-home'); renderHome(); }
+function backToConfig() {
+  if (!currentProduct) return goHome();
+  document.getElementById('sd1').className = 'step-dot active w-2.5 h-2.5 rounded-full inline-block bg-brand';
+  document.getElementById('sd1').style.boxShadow = '0 0 0 4px rgba(0,133,106,.15)';
+  document.getElementById('sd2').className = 'step-dot w-2.5 h-2.5 rounded-full inline-block bg-gray-300';
+  document.getElementById('sd2').style.boxShadow = '';
+  showPage('page-config');
+}
 
-renderHome('all');
+renderHome();
 </script>
 </body>
 </html>
