@@ -95,6 +95,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     <button class="btn btn-outline" onclick="exportData()">📥 导出备份</button>
     <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📤 导入</button>
     <button class="btn btn-white" onclick="openAdd()">＋ 添加产品</button>
+    <button class="btn btn-outline" onclick="reloadFromDataJS()">🔄 刷新数据</button>
     <button class="btn btn-white" id="publishBtn" onclick="publishNow()" style="background:#e53935;color:#fff;">🚀 发布上线</button>
   </div>
 </div>
@@ -198,18 +199,10 @@ function login() {
 }
 
 function getProducts() {
+  // localStorage is the admin's working copy — always use it first
   const raw = localStorage.getItem(STORAGE_KEY);
-  // Skip localStorage if it's older than data.js — use data.js as source of truth
-  if (raw && typeof PRODUCT_DATA !== 'undefined') {
-    // localStorage exists AND data.js loaded: prefer data.js (it's the source of truth)
-    const parsed = JSON.parse(raw);
-    if (parsed.length !== PRODUCT_DATA.length || JSON.stringify(parsed) !== JSON.stringify(PRODUCT_DATA)) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCT_DATA));
-      return JSON.parse(JSON.stringify(PRODUCT_DATA));
-    }
-    return parsed;
-  }
   if (raw) return JSON.parse(raw);
+  // No localStorage yet: seed from data.js
   if (typeof PRODUCT_DATA !== 'undefined') {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCT_DATA));
     return JSON.parse(JSON.stringify(PRODUCT_DATA));
@@ -218,6 +211,13 @@ function getProducts() {
 }
 
 function saveProducts(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+function reloadFromDataJS() {
+  if (!confirm('确定从 data.js 重新加载产品数据？\n\n当前 localStorage 的修改会被清空。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderList();
+  toast('✅ 已刷新，共 ' + getProducts().length + ' 款产品');
+}
 
 let tempSpecs = [], tempBoxes = [], tempOptAC = [], tempAddons = [];
 
