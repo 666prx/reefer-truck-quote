@@ -1,7 +1,7 @@
 // ============================================================
 // 冷藏车产品数据库 — 基于公司产品库（销售价，非成本价）
-// 冷机: 15款全覆盖 | 厢体: 含不锈钢地板升级选项
-// 冷机匹配规则: 按厢体容积匹配（松芝官网数据+华盛/开利公告验证）
+// 冷机: 按厢体容积匹配（松芝官网+华盛/开利公告验证）
+// 厢体: 推荐原厂厢体
 // ============================================================
 
 const PRODUCT_DATA = [
@@ -24,9 +24,9 @@ const PRODUCT_DATA = [
       "质保": "8年/50万km"
     },
     boxes: [
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 },
       { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
-      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
-      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 }
     ],
     defaultAC: { name: "华盛EV600 分体机", price: 0, fullPrice: 16000, temp: "最低-20℃" },
     optionalAC: [
@@ -69,9 +69,9 @@ const PRODUCT_DATA = [
       "质保": "8年/50万km"
     },
     boxes: [
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 },
       { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
-      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
-      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 }
     ],
     defaultAC: { name: "华盛EV600 分体机", price: 0, fullPrice: 16000, temp: "最低-20℃" },
     optionalAC: [
@@ -115,8 +115,8 @@ const PRODUCT_DATA = [
       "质保": "8年/40万km"
     },
     boxes: [
-      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板，304不锈钢门框", price: 32000 },
-      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 28000 }
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 28000 },
+      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板，304不锈钢门框", price: 32000 }
     ],
     defaultAC: { name: "华盛EV300 分体机", price: 0, fullPrice: 9500, temp: "最低-15℃" },
     optionalAC: [
@@ -152,9 +152,9 @@ const PRODUCT_DATA = [
       "质保": "8年/50万km"
     },
     boxes: [
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 },
       { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
-      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
-      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 }
     ],
     defaultAC: { name: "华盛EV600 分体机", price: 0, fullPrice: 16000, temp: "最低-20℃" },
     optionalAC: [
@@ -264,9 +264,9 @@ const PRODUCT_DATA = [
       "载重": "6T"
     },
     boxes: [
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 },
       { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
-      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
-      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 }
     ],
     defaultAC: { name: "松芝X5-S 制冷机组", price: 0, fullPrice: 13000, temp: "最低-18℃" },
     optionalAC: [
@@ -301,8 +301,8 @@ const PRODUCT_DATA = [
       "货箱": "3.8米"
     },
     boxes: [
-      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板", price: 30000 },
-      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 26000 }
+      { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 26000 },
+      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板", price: 30000 }
     ],
     defaultAC: { name: "松芝X3 制冷机组", price: 0, fullPrice: 9000, temp: "最低-15℃" },
     optionalAC: [
