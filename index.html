@@ -273,7 +273,7 @@ function renderConfig() {
       '<div class="flex items-start gap-3 pr-7"><div class="w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 radio-check '+(sel?'border-brand bg-brand':'border-gray-300')+'">'+(sel?'<i class="fa-solid fa-check text-white text-xs m-auto block text-center leading-5"></i>':'')+'</div>' +
       '<div class="flex-1"><p class="font-medium text-sm">'+box.name+(i===0?' <span class="inline-block text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand font-semibold border border-brand-border">推荐</span>':'')+'</p>' +
       '<p class="text-xs text-gray-400 mt-1">'+(box.desc||'')+'</p></div>' +
-      '<div class="text-right flex-shrink-0"><span class="text-sm font-semibold '+(box.price===0?'text-brand':'text-red-500')+'">'+(box.price===0?'标配':'+¥'+fmt(box.price)+'万')+'</span></div></div></div>';
+      '<div class="text-right flex-shrink-0"><span class="text-sm font-semibold '+(box.price===0?'text-brand':(i===0?'text-gray-700':'text-red-500'))+'">'+(box.price===0?'标配':(i===0?'¥'+fmt(box.price)+'万':'+¥'+fmt(box.price)+'万'))+'</span></div></div></div>';
   });
   html += '</div>';
 
@@ -353,7 +353,8 @@ function renderPricePanel() {
   var html = '<h3 class="font-semibold text-sm mb-4">💰 报价汇总</h3>';
 
   html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">裸车价格</span><span class="font-semibold">'+fmtFull(p.basePrice)+'</span></div>';
-  html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">厢体</span><span class="font-medium">'+box.name+(box.price>0?' +'+fmtFull(box.price):' (标配)')+'</span></div>';
+  var boxPriceHtml = box.price===0?' (标配)':(selectedBox===0?' ¥'+fmtFull(box.price):' +'+fmtFull(box.price));
+  html += '<div class="flex justify-between items-center py-2 text-sm"><span class="text-gray-500">厢体</span><span class="font-medium">'+box.name + boxPriceHtml+'</span></div>';
   var acPriceHtml = '(标配)';
   if (selectedAC > 0) {
     if (ac.price > 0) acPriceHtml = ' +' + fmtFull(ac.price);
@@ -445,7 +446,8 @@ function showQuote() {
   html += '<h3 class="font-semibold text-base mb-3">费用明细</h3>';
   html += '<table class="w-full text-sm"><thead><tr class="border-b-2 border-gray-100 text-left text-gray-400 text-xs uppercase tracking-wide"><th class="py-2 font-medium">项目</th><th class="py-2 font-medium text-right">金额</th></tr></thead><tbody>';
   html += '<tr class="border-b border-gray-50"><td class="py-2.5">裸车价格</td><td class="py-2.5 text-right font-medium">'+fmtFull(p.basePrice)+'</td></tr>';
-  html += '<tr class="border-b border-gray-50"><td class="py-2.5">厢体：'+box.name+'</td><td class="py-2.5 text-right font-medium">'+(box.price>0?fmtFull(box.price):'标配')+'</td></tr>';
+  var boxQuoteText = box.price===0?'标配':(selectedBox===0?fmtFull(box.price):'+'+fmtFull(box.price));
+  html += '<tr class="border-b border-gray-50"><td class="py-2.5">厢体：'+box.name+'</td><td class="py-2.5 text-right font-medium">'+boxQuoteText+'</td></tr>';
   html += '<tr class="border-b border-gray-50"><td class="py-2.5">冷机：'+ac.name+'</td><td class="py-2.5 text-right font-medium">'+(function(){if(selectedAC===0)return'标配';if(ac.price>0)return'+'+fmtFull(ac.price);if(ac.price<0)return'-'+fmtFull(Math.abs(ac.price));return'同价';})()+'</td></tr>';
   p.addons.forEach(function(a,i) {
     if (selectedAddons.has(i)) html += '<tr class="border-b border-gray-50"><td class="py-2.5">'+a.name+'</td><td class="py-2.5 text-right font-medium text-red-500">+'+fmtFull(a.price)+'</td></tr>';
@@ -481,7 +483,8 @@ function shareQuote() {
   var box = p.boxes[selectedBox];
   var ac = selectedAC === 0 ? p.defaultAC : p.optionalAC[selectedAC - 1];
   var acShareText = selectedAC===0?'标配':(ac.price>0?'+'+fmtFull(ac.price):('-'+fmtFull(Math.abs(ac.price))));
-  var text = '【冷藏车报价单】\n'+p.name+'\n\n━━ 费用明细 ━━\n裸车：'+fmtFull(p.basePrice)+'\n厢体('+box.name+')：'+(box.price>0?fmtFull(box.price):'标配')+'\n冷机('+ac.name+')：'+acShareText+'\n';
+  var boxShareText = box.price===0?'标配':(selectedBox===0?fmtFull(box.price):'+'+fmtFull(box.price));
+  var text = '【冷藏车报价单】\n'+p.name+'\n\n━━ 费用明细 ━━\n裸车：'+fmtFull(p.basePrice)+'\n厢体('+box.name+')：'+boxShareText+'\n冷机('+ac.name+')：'+acShareText+'\n';
   p.addons.forEach(function(a,i){ if(selectedAddons.has(i)) text += a.name+'：+'+fmtFull(a.price)+'\n'; });
   text += '保险+上户：'+fmtFull(b.fees)+'\n';
   if(b.subsidy>0) text += '国家补贴：-'+fmtFull(b.subsidy)+'\n';
