@@ -285,8 +285,8 @@ function renderConfig() {
     (defSel ? '<i class="fa-solid fa-circle-check absolute top-3 right-3 text-brand text-lg"></i>' : '') +
     '<div class="flex items-start gap-3 pr-7"><div class="w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 radio-check '+(defSel?'border-brand bg-brand':'border-gray-300')+'">'+(defSel?'<i class="fa-solid fa-check text-white text-xs m-auto block text-center leading-5"></i>':'')+'</div>' +
     '<div class="flex-1"><p class="font-medium text-sm">'+p.defaultAC.name+'（标配）<span class="inline-block text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand font-semibold border border-brand-border">推荐</span></p>' +
-    '<p class="text-xs text-gray-400 mt-1">'+(p.defaultAC.temp||'')+'</p></div>' +
-    '<div class="text-right flex-shrink-0"><span class="text-sm font-semibold text-brand">标配</span></div></div></div>';
+    '<p class="text-xs text-gray-400 mt-1">'+(p.defaultAC.temp||'')+' · 销售价 ¥'+(p.defaultAC.fullPrice||0).toLocaleString()+'</p></div>' +
+    '<div class="text-right flex-shrink-0"><span class="text-sm text-gray-400">含在车价</span><span class="text-sm font-semibold text-brand"> ¥' + fmt(p.defaultAC.fullPrice||0) + '万</span></div></div></div>';
   // Optional AC — sorted by price descending (upgrades first, then discounts)
   var sortedAC = p.optionalAC.map(function(ac, i) { return { ac: ac, idx: i + 1 }; });
   sortedAC.sort(function(a, b) { return b.ac.price - a.ac.price; });
