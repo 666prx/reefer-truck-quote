@@ -1,5 +1,6 @@
 // ============================================================
 // 冷藏车产品数据库 — 基于公司产品库（销售价，非成本价）
+// 冷机: 15款全覆盖 | 厢体: 含不锈钢地板升级选项
 // ============================================================
 
 const PRODUCT_DATA = [
@@ -23,24 +24,32 @@ const PRODUCT_DATA = [
     },
     boxes: [
       { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
     ],
-    defaultAC: { name: "华盛EV600 分体机", price: 0, temp: "最低-20℃" },
+    defaultAC: { name: "华盛EV600 分体机", price: 0, fullPrice: 16000, temp: "最低-20℃" },
     optionalAC: [
-      { name: "升级华盛EV600MB 一体机", price: 3000 },
-      { name: "升级开利PULSOR eCool P6", price: 9000 },
-      { name: "升级松芝SE 380 新能源", price: 0 },
-      { name: "升级黑盾HE600F 一体机", price: 9000 }
+      { name: "华盛EV600MB 一体机", price: 3000, fullPrice: 19000, temp: "最低-22℃" },
+      { name: "开利PULSOR eCool P6", price: 9000, fullPrice: 25000, temp: "最低-25℃" },
+      { name: "黑盾HE600F 一体机", price: 9000, fullPrice: 25000, temp: "最低-22℃" },
+      { name: "松芝EX580", price: 2000, fullPrice: 18000, temp: "最低-22℃" },
+      { name: "黑盾460Y", price: -1000, fullPrice: 15000, temp: "最低-20℃" },
+      { name: "松芝SE380 新能源", price: -1500, fullPrice: 14500, temp: "最低-20℃" },
+      { name: "松芝SE330 新能源", price: -3000, fullPrice: 13000, temp: "最低-18℃" },
+      { name: "华盛EV400 分体机", price: -6000, fullPrice: 10000, temp: "最低-18℃" },
+      { name: "华盛EV300 分体机", price: -6500, fullPrice: 9500, temp: "最低-15℃" },
+      { name: "黑盾380Y", price: -7000, fullPrice: 9000, temp: "最低-18℃" }
     ],
     addons: [
       { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
       { name: "GPS/4G温度监控", price: 4000 },
       { name: "铝花纹裙边", price: 1500 },
-      { name: "不锈钢裙边", price: 2000 }
+      { name: "不锈钢裙边", price: 2000 },
+      { name: "隔温板", price: 1000 }
     ],
     otherFees: { insurance: 12000, registration: 2000 },
     subsidy: 35000,
-    note: "底盘价15万 + 厢体3.3~3.8万 + 冷机选配，全部为销售价"
+    note: "底盘价15万 + 厢体3.3~4.2万 + 冷机选配，全部为销售价"
   },
 
   {
@@ -62,24 +71,32 @@ const PRODUCT_DATA = [
     },
     boxes: [
       { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
     ],
-    defaultAC: { name: "华盛EV600 分体机", price: 0, temp: "最低-20℃" },
+    defaultAC: { name: "华盛EV600 分体机", price: 0, fullPrice: 16000, temp: "最低-20℃" },
     optionalAC: [
-      { name: "升级华盛EV600MB 一体机", price: 3000 },
-      { name: "升级开利PULSOR eCool P6", price: 9000 },
-      { name: "升级松芝SE 380 新能源", price: 0 },
-      { name: "升级黑盾HE600F 一体机", price: 9000 }
+      { name: "华盛EV600MB 一体机", price: 3000, fullPrice: 19000, temp: "最低-22℃" },
+      { name: "开利PULSOR eCool P6", price: 9000, fullPrice: 25000, temp: "最低-25℃" },
+      { name: "黑盾HE600F 一体机", price: 9000, fullPrice: 25000, temp: "最低-22℃" },
+      { name: "松芝EX580", price: 2000, fullPrice: 18000, temp: "最低-22℃" },
+      { name: "黑盾460Y", price: -1000, fullPrice: 15000, temp: "最低-20℃" },
+      { name: "松芝SE380 新能源", price: -1500, fullPrice: 14500, temp: "最低-20℃" },
+      { name: "松芝SE330 新能源", price: -3000, fullPrice: 13000, temp: "最低-18℃" },
+      { name: "华盛EV400 分体机", price: -6000, fullPrice: 10000, temp: "最低-18℃" },
+      { name: "华盛EV300 分体机", price: -6500, fullPrice: 9500, temp: "最低-15℃" },
+      { name: "黑盾380Y", price: -7000, fullPrice: 9000, temp: "最低-18℃" }
     ],
     addons: [
       { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
       { name: "GPS/4G温度监控", price: 4000 },
       { name: "铝花纹裙边", price: 1500 },
-      { name: "不锈钢裙边", price: 2000 }
+      { name: "不锈钢裙边", price: 2000 },
+      { name: "隔温板", price: 1000 }
     ],
     otherFees: { insurance: 13000, registration: 2000 },
     subsidy: 35000,
-    note: "底盘价17.1万 + 厢体3.3~3.8万 + 冷机选配，全部为销售价"
+    note: "底盘价17.1万 + 厢体3.3~4.2万 + 冷机选配，全部为销售价"
   },
 
   // ==================== 福田奥铃系列 ====================
@@ -101,18 +118,20 @@ const PRODUCT_DATA = [
       "质保": "8年/40万km"
     },
     boxes: [
-      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板", price: 32000 },
+      { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板，304不锈钢门框", price: 32000 },
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 28000 }
     ],
-    defaultAC: { name: "华盛EV300 分体机", price: 0, temp: "最低-15℃" },
+    defaultAC: { name: "华盛EV300 分体机", price: 0, fullPrice: 9500, temp: "最低-15℃" },
     optionalAC: [
-      { name: "升级华盛EV400 分体机", price: 500 },
-      { name: "升级黑盾380Y", price: 0 },
-      { name: "升级松芝SE 330 新能源", price: 3500 }
+      { name: "华盛EV400 分体机", price: 500, fullPrice: 10000, temp: "最低-18℃" },
+      { name: "黑盾460Y", price: 5500, fullPrice: 15000, temp: "最低-20℃" },
+      { name: "松芝SE330 新能源", price: 3500, fullPrice: 13000, temp: "最低-18℃" },
+      { name: "黑盾380Y", price: -500, fullPrice: 9000, temp: "最低-18℃" }
     ],
     addons: [
       { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
-      { name: "GPS/4G温度监控", price: 4000 }
+      { name: "GPS/4G温度监控", price: 4000 },
+      { name: "隔温板", price: 1000 }
     ],
     otherFees: { insurance: 11000, registration: 2000 },
     subsidy: 35000,
@@ -138,24 +157,32 @@ const PRODUCT_DATA = [
     },
     boxes: [
       { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
     ],
-    defaultAC: { name: "华盛EV600 分体机", price: 0, temp: "最低-20℃" },
+    defaultAC: { name: "华盛EV600 分体机", price: 0, fullPrice: 16000, temp: "最低-20℃" },
     optionalAC: [
-      { name: "升级华盛EV600MB 一体机", price: 3000 },
-      { name: "升级开利PULSOR eCool P6", price: 9000 },
-      { name: "升级松芝SE 380 新能源", price: 0 },
-      { name: "升级黑盾HE600F 一体机", price: 9000 }
+      { name: "华盛EV600MB 一体机", price: 3000, fullPrice: 19000, temp: "最低-22℃" },
+      { name: "开利PULSOR eCool P6", price: 9000, fullPrice: 25000, temp: "最低-25℃" },
+      { name: "黑盾HE600F 一体机", price: 9000, fullPrice: 25000, temp: "最低-22℃" },
+      { name: "松芝EX580", price: 2000, fullPrice: 18000, temp: "最低-22℃" },
+      { name: "黑盾460Y", price: -1000, fullPrice: 15000, temp: "最低-20℃" },
+      { name: "松芝SE380 新能源", price: -1500, fullPrice: 14500, temp: "最低-20℃" },
+      { name: "松芝SE330 新能源", price: -3000, fullPrice: 13000, temp: "最低-18℃" },
+      { name: "华盛EV400 分体机", price: -6000, fullPrice: 10000, temp: "最低-18℃" },
+      { name: "华盛EV300 分体机", price: -6500, fullPrice: 9500, temp: "最低-15℃" },
+      { name: "黑盾380Y", price: -7000, fullPrice: 9000, temp: "最低-18℃" }
     ],
     addons: [
       { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
       { name: "GPS/4G温度监控", price: 4000 },
       { name: "铝花纹裙边", price: 1500 },
-      { name: "不锈钢裙边", price: 2000 }
+      { name: "不锈钢裙边", price: 2000 },
+      { name: "隔温板", price: 1000 }
     ],
     otherFees: { insurance: 12000, registration: 2000 },
     subsidy: 35000,
-    note: "底盘价16.2万 + 厢体3.3~3.8万 + 冷机选配，全部为销售价"
+    note: "底盘价16.2万 + 厢体3.3~4.2万 + 冷机选配，全部为销售价"
   },
 
   // ==================== 福田祥菱系列 ====================
@@ -178,11 +205,11 @@ const PRODUCT_DATA = [
     boxes: [
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁，含底盘", price: 0 }
     ],
-    defaultAC: { name: "黑盾380Y", price: 0, temp: "最低-18℃" },
+    defaultAC: { name: "黑盾380Y", price: 0, fullPrice: 9000, temp: "最低-18℃" },
     optionalAC: [
-      { name: "升级华盛EV300 分体机", price: 500 },
-      { name: "升级黑盾460Y", price: 6000 },
-      { name: "升级松芝SE 330 新能源", price: 4000 }
+      { name: "华盛EV300 分体机", price: 500, fullPrice: 9500, temp: "最低-15℃" },
+      { name: "松芝SE330 新能源", price: 4000, fullPrice: 13000, temp: "最低-18℃" },
+      { name: "黑盾460Y", price: 6000, fullPrice: 15000, temp: "最低-20℃" }
     ],
     addons: [
       { name: "GPS/4G温度监控", price: 4000 },
@@ -212,10 +239,11 @@ const PRODUCT_DATA = [
     boxes: [
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁，含底盘", price: 0 }
     ],
-    defaultAC: { name: "松芝X1 制冷机组", price: 0, temp: "最低-15℃" },
+    defaultAC: { name: "松芝X1 制冷机组", price: 0, fullPrice: 8500, temp: "最低-15℃" },
     optionalAC: [
-      { name: "升级松芝X3 制冷机组", price: 500 },
-      { name: "升级松芝X5-S 制冷机组", price: 4500 }
+      { name: "松芝X3 制冷机组", price: 500, fullPrice: 9000, temp: "最低-15℃" },
+      { name: "松芝X5-S 制冷机组", price: 4500, fullPrice: 13000, temp: "最低-18℃" },
+      { name: "松芝EX580", price: 9500, fullPrice: 18000, temp: "最低-22℃" }
     ],
     addons: [
       { name: "GPS/4G温度监控", price: 4000 },
@@ -244,20 +272,22 @@ const PRODUCT_DATA = [
       "载重": "6T"
     },
     boxes: [
-      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁", price: 38000 },
+      { name: "CIMC中集K2", desc: "高光铝板外壁+VR热塑板内壁，美式全满焊铝地台", price: 38000 },
+      { name: "CIMC中集K2 不锈钢地板", desc: "K2厢体+全满焊不锈钢地板，304不锈钢防滑", price: 42000 },
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 33000 }
     ],
-    defaultAC: { name: "松芝X1 制冷机组", price: 0, temp: "最低-15℃" },
+    defaultAC: { name: "松芝X1 制冷机组", price: 0, fullPrice: 8500, temp: "最低-15℃" },
     optionalAC: [
-      { name: "升级松芝X3 制冷机组", price: 500 },
-      { name: "升级松芝X5-S 制冷机组", price: 4500 },
-      { name: "升级松芝EX580", price: 9500 }
+      { name: "松芝X3 制冷机组", price: 500, fullPrice: 9000, temp: "最低-15℃" },
+      { name: "松芝X5-S 制冷机组", price: 4500, fullPrice: 13000, temp: "最低-18℃" },
+      { name: "松芝EX580", price: 9500, fullPrice: 18000, temp: "最低-22℃" }
     ],
     addons: [
       { name: "铝合金尾板 1.5T（畅友力）", price: 8500 },
       { name: "GPS/4G温度监控", price: 4000 },
       { name: "铝花纹裙边", price: 1500 },
-      { name: "不锈钢裙边", price: 2000 }
+      { name: "不锈钢裙边", price: 2000 },
+      { name: "隔温板", price: 1000 }
     ],
     otherFees: { insurance: 10000, registration: 2500 },
     subsidy: 0,
@@ -283,10 +313,10 @@ const PRODUCT_DATA = [
       { name: "CIMC中集M", desc: "外壁玻璃钢+内壁热塑板，卡槽式厢板", price: 30000 },
       { name: "原厂厢体", desc: "玻璃钢外壁+热塑板内壁", price: 26000 }
     ],
-    defaultAC: { name: "松芝X1 制冷机组", price: 0, temp: "最低-15℃" },
+    defaultAC: { name: "松芝X1 制冷机组", price: 0, fullPrice: 8500, temp: "最低-15℃" },
     optionalAC: [
-      { name: "升级松芝X3 制冷机组", price: 500 },
-      { name: "升级松芝X5-S 制冷机组", price: 4500 }
+      { name: "松芝X3 制冷机组", price: 500, fullPrice: 9000, temp: "最低-15℃" },
+      { name: "松芝X5-S 制冷机组", price: 4500, fullPrice: 13000, temp: "最低-18℃" }
     ],
     addons: [
       { name: "GPS/4G温度监控", price: 4000 },
