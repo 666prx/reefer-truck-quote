@@ -159,6 +159,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
         <div class="row">
           <div class="field"><label>名称</label><input id="acName" placeholder="如：华盛火星EV600"></div>
           <div class="field" style="flex:0 0 120px"><label>温度</label><input id="acTemp" placeholder="如：最低-20℃"></div>
+          <div class="field" style="flex:0 0 120px"><label>销售价（元）</label><input id="acFullPrice" type="number" placeholder="16000"></div>
         </div>
       </div>
     </div>
@@ -198,6 +199,16 @@ function login() {
 
 function getProducts() {
   const raw = localStorage.getItem(STORAGE_KEY);
+  // Skip localStorage if it's older than data.js — use data.js as source of truth
+  if (raw && typeof PRODUCT_DATA !== 'undefined') {
+    // localStorage exists AND data.js loaded: prefer data.js (it's the source of truth)
+    const parsed = JSON.parse(raw);
+    if (parsed.length !== PRODUCT_DATA.length || JSON.stringify(parsed) !== JSON.stringify(PRODUCT_DATA)) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCT_DATA));
+      return JSON.parse(JSON.stringify(PRODUCT_DATA));
+    }
+    return parsed;
+  }
   if (raw) return JSON.parse(raw);
   if (typeof PRODUCT_DATA !== 'undefined') {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCT_DATA));
@@ -243,9 +254,13 @@ function renderOptAC() {
         <div class="field"><label>名称</label><input value="${esc(a.name)}" onchange="tempOptAC[${i}].name=this.value" placeholder="如：升级开利冷机"></div>
         <div class="field short"><label>加价（元）</label><input type="number" value="${a.price}" onchange="tempOptAC[${i}].price=+this.value"></div>
       </div>
+      <div class="row">
+        <div class="field short"><label>销售价（元）</label><input type="number" value="${a.fullPrice||''}" onchange="tempOptAC[${i}].fullPrice=+this.value" placeholder="冷机全价"></div>
+        <div class="field short"><label>温度</label><input value="${esc(a.temp||'')}" onchange="tempOptAC[${i}].temp=this.value" placeholder="如：最低-20℃"></div>
+      </div>
     </div>`).join('');
 }
-function addOptAC() { tempOptAC.push({name:'',price:0}); renderOptAC(); }
+function addOptAC() { tempOptAC.push({name:'',price:0,fullPrice:0,temp:''}); renderOptAC(); }
 
 function renderAddons() {
   document.getElementById('addonsList').innerHTML = tempAddons.map((a, i) => `
@@ -412,7 +427,7 @@ function openAdd() {
   clearBasicForm(); clearImage();
   tempSpecs = []; tempBoxes = [{name:'',desc:'',price:0}]; tempOptAC = []; tempAddons = [];
   renderSpecs(); renderBoxes(); renderOptAC(); renderAddons();
-  document.getElementById('acName').value = ''; document.getElementById('acTemp').value = '';
+  document.getElementById('acName').value = ''; document.getElementById('acTemp').value = ''; document.getElementById('acFullPrice').value = '';
   document.getElementById('editModal').classList.add('show');
 }
 
@@ -436,6 +451,7 @@ function openEdit(index) {
   tempAddons = JSON.parse(JSON.stringify(p.addons || []));
   document.getElementById('acName').value = (p.defaultAC||{}).name || '';
   document.getElementById('acTemp').value = (p.defaultAC||{}).temp || '';
+  document.getElementById('acFullPrice').value = (p.defaultAC||{}).fullPrice || '';
   renderSpecs(); renderBoxes(); renderOptAC(); renderAddons();
   document.getElementById('editModal').classList.add('show');
 }
@@ -456,8 +472,18 @@ function saveProduct() {
       sellingPrice: parseInt(document.getElementById('editSellingPrice').value) || 0,
       specs: specs,
       boxes: tempBoxes.filter(b => b.name.trim()),
-      defaultAC: { name: document.getElementById('acName').value.trim(), price: 0, temp: document.getElementById('acTemp').value.trim() },
-      optionalAC: tempOptAC.filter(a => a.name.trim()),
+      defaultAC: {
+        name: document.getElementById('acName').value.trim(),
+        price: 0,
+        fullPrice: parseInt(document.getElementById('acFullPrice').value) || 0,
+        temp: document.getElementById('acTemp').value.trim()
+      },
+      optionalAC: tempOptAC.filter(a => a.name.trim()).map(a => ({
+        name: a.name.trim(),
+        price: a.price || 0,
+        fullPrice: a.fullPrice || 0,
+        temp: a.temp || ''
+      })),
       addons: tempAddons.filter(a => a.name.trim()),
       otherFees: { insurance: parseInt(document.getElementById('editInsurance').value) || 0, registration: parseInt(document.getElementById('editRegistration').value) || 0 },
       subsidy: parseInt(document.getElementById('editSubsidy').value) || 0,
