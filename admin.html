@@ -7,7 +7,7 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background:#f5f7fa; color:#333; padding-bottom:40px; }
-
+	
 .login-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:linear-gradient(135deg,#0d9488,#0f766e); display:flex; align-items:center; justify-content:center; z-index:9999; }
 .login-box { background:#fff; border-radius:16px; padding:32px 24px; width:90%; max-width:360px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.2); }
 .login-box h2 { margin-bottom:8px; font-size:20px; }
@@ -15,8 +15,8 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .login-box input { width:100%; padding:12px; border:2px solid #e0e0e0; border-radius:8px; font-size:16px; text-align:center; margin-bottom:12px; }
 .login-box input:focus { border-color:#0d9488; outline:none; }
 .login-box .hint { font-size:11px; color:#999; margin-top:8px; }
-
-.header { background:linear-gradient(135deg,#0d9488,#0f766e); color:#fff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+	
+.header { background:linear-gradient(135deg,#0d9488,#0f766e); color:#fff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; }
 .header h1 { font-size:18px; }
 .btn { padding:8px 16px; border-radius:6px; border:none; font-size:13px; font-weight:600; cursor:pointer; }
 .btn:active { opacity:.8; }
@@ -24,7 +24,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .btn-outline { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.5); }
 .btn-red { background:#e53935; color:#fff; }
 .btn-green { background:#0d9488; color:#fff; }
-
+	
 .container { max-width:800px; margin:0 auto; padding:16px; }
 .product-admin-card { background:#fff; border-radius:10px; padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
 .product-admin-card img { width:60px; height:60px; border-radius:8px; object-fit:cover; background:#e0e0e0; flex-shrink:0; }
@@ -36,7 +36,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .product-admin-card .btns button { padding:6px 12px; border-radius:4px; border:1px solid #ddd; background:#fff; font-size:12px; cursor:pointer; }
 .product-admin-card .btns button:active { background:#f0f0f0; }
 .product-admin-card .btns .del { color:#e53935; border-color:#e53935; }
-
+	
 .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:1000; overflow-y:auto; }
 .modal.show { display:flex; align-items:flex-start; justify-content:center; padding:20px; }
 .modal-content { background:#fff; border-radius:12px; width:100%; max-width:640px; padding:20px; margin-top:20px; margin-bottom:40px; }
@@ -50,7 +50,8 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .form-row .form-group { flex:1; }
 .form-actions { display:flex; gap:10px; margin-top:16px; justify-content:flex-end; }
 .help-text { font-size:11px; color:#999; margin-top:4px; }
-
+	
+/* Dynamic list sections */
 .list-section { background:#f8fafb; border-radius:8px; padding:12px; margin-bottom:8px; border:1px solid #e8edf2; }
 .list-section .section-label { font-size:13px; font-weight:600; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
 .list-item { background:#fff; border:1px solid #e8edf2; border-radius:8px; padding:10px; margin-bottom:6px; position:relative; }
@@ -68,14 +69,39 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .empty-state { text-align:center; padding:40px; color:#999; }
 .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 24px; border-radius:20px; font-size:14px; z-index:9999; opacity:0; transition:opacity .2s; pointer-events:none; }
 .toast.show { opacity:1; }
-
+	
 .upload-zone { border:2px dashed #ccc; border-radius:8px; padding:16px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; min-height:100px; display:flex; align-items:center; justify-content:center; }
 .upload-zone:hover, .upload-zone.drag-over { border-color:#0d9488; background:#f0fdfa; }
 .upload-placeholder { display:flex; flex-direction:column; align-items:center; gap:4px; color:#888; font-size:13px; }
 .upload-preview { position:relative; display:flex; align-items:center; justify-content:center; }
 .upload-preview img { max-height:160px; max-width:100%; border-radius:6px; }
 .clear-img { position:absolute; top:-8px; right:-8px; width:22px; height:22px; border-radius:50%; border:none; background:#e53935; color:#fff; font-size:14px; cursor:pointer; line-height:1; display:flex; align-items:center; justify-content:center; }
+	
+/* Excel import modal */
+.import-excel-zone { border:2px dashed #ccc; border-radius:8px; padding:24px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; }
+.import-excel-zone:hover, .import-excel-zone.drag-over { border-color:#0d9488; background:#f0fdfa; }
+.import-summary { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+.import-summary .tag { display:inline-block; padding:4px 10px; border-radius:12px; font-size:12px; }
+.import-summary .tag.cat-chassis { background:#e3f2fd; color:#1565c0; }
+.import-summary .tag.cat-ac { background:#fff3e0; color:#e65100; }
+.import-summary .tag.cat-box { background:#f3e5f5; color:#7b1fa2; }
+.import-summary .tag.cat-complete { background:#e8f5e9; color:#2e7d32; }
+.import-summary .tag.cat-accessory { background:#fce4ec; color:#c62828; }
+.import-entry-card { background:#fff; border:1px solid #e0e0e0; border-radius:8px; padding:12px; margin-bottom:8px; display:flex; align-items:flex-start; gap:12px; transition:background .2s; }
+.import-entry-card.selected { background:#f0fdfa; border-color:#0d9488; }
+.import-entry-card input[type=checkbox] { width:18px; height:18px; margin-top:3px; flex-shrink:0; accent-color:#0d9488; }
+.import-entry-card .preview-info { flex:1; min-width:0; }
+.import-entry-card .preview-name { font-size:14px; font-weight:600; }
+.import-entry-card .preview-detail { font-size:11px; color:#888; margin-top:4px; line-height:1.6; }
+.import-entry-card .preview-price { font-size:14px; font-weight:700; color:#e53935; flex-shrink:0; }
+.import-actions { display:flex; gap:10px; margin-top:16px; justify-content:space-between; align-items:center; }
+.select-all-bar { display:flex; gap:12px; align-items:center; padding:8px 0; border-bottom:1px solid #eee; margin-bottom:10px; }
+.select-all-bar label { font-size:13px; color:#555; cursor:pointer; }
+.cat-badge { display:inline-block; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700; margin-left:4px; vertical-align:middle; }
+.cat-badge.cat-chassis { background:#e3f2fd; color:#1565c0; }
+.cat-badge.cat-complete { background:#e8f5e9; color:#2e7d32; }
 </style>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -85,7 +111,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     <p>请输入管理密码</p>
     <input type="password" id="pwdInput" placeholder="密码" onkeydown="if(event.key==='Enter')login()">
     <button class="btn btn-green" style="width:100%;padding:12px;" onclick="login()">进入后台</button>
-    <div class="help-text" style="margin-top:8px;">默认密码：admin123</div>
+    <div class="help-text" style="margin-top:8px;">密码请咨询管理员</div>
   </div>
 </div>
 
@@ -94,20 +120,24 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   <div class="actions">
     <button class="btn btn-outline" onclick="exportData()">📥 导出备份</button>
     <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📤 导入</button>
+    <button class="btn btn-outline" id="excelImportBtn" onclick="openExcelModal()">📊 从Excel导入</button>
     <button class="btn btn-white" onclick="openAdd()">＋ 添加产品</button>
     <button class="btn btn-outline" onclick="reloadFromDataJS()">🔄 刷新数据</button>
     <button class="btn btn-white" id="publishBtn" onclick="publishNow()" style="background:#e53935;color:#fff;">🚀 发布上线</button>
   </div>
 </div>
 <input type="file" id="importFile" accept=".json,.js" style="display:none" onchange="importData(event)">
+<input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display:none" onchange="handleExcelFile(event)">
 
 <div class="container" id="productList"></div>
 
+<!-- Edit Modal -->
 <div class="modal" id="editModal">
   <div class="modal-content">
     <h2 id="modalTitle">添加产品</h2>
     <input type="hidden" id="editId">
 
+    <!-- 基本信息 -->
     <div class="form-row">
       <div class="form-group"><label>品牌</label><input id="editBrand" placeholder="如：江铃"></div>
       <div class="form-group"><label>能源类型</label><select id="editPowerType"><option>纯电</option><option>混动</option><option>燃油</option></select></div>
@@ -142,18 +172,21 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     </div>
     <div class="form-group"><label>备注（可选）</label><input id="editNote" placeholder="显示在报价单底部的提示信息"></div>
 
+    <!-- 核心参数 -->
     <div class="list-section">
       <div class="section-label"><span>📋 核心参数</span></div>
       <div id="specsList"></div>
       <button class="add-btn" onclick="addSpec()">＋ 添加参数</button>
     </div>
 
+    <!-- 厢体选项 -->
     <div class="list-section">
       <div class="section-label"><span>📦 厢体选项</span></div>
       <div id="boxesList"></div>
       <button class="add-btn" onclick="addBox()">＋ 添加厢体</button>
     </div>
 
+    <!-- 标配冷机 -->
     <div class="list-section">
       <div class="section-label"><span>❄️ 标配冷机</span></div>
       <div id="defaultACWrap">
@@ -165,12 +198,14 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
       </div>
     </div>
 
+    <!-- 可选冷机 -->
     <div class="list-section">
       <div class="section-label"><span>🔄 可选冷机升级</span></div>
       <div id="optionalACList"></div>
       <button class="add-btn" onclick="addOptAC()">＋ 添加可选冷机</button>
     </div>
 
+    <!-- 选装件 -->
     <div class="list-section">
       <div class="section-label"><span>🔧 选装件</span></div>
       <div id="addonsList"></div>
@@ -186,11 +221,40 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 
 <div class="toast" id="toast"></div>
 
+<!-- Excel Import Modal -->
+<div class="modal" id="excelModal">
+  <div class="modal-content" style="max-width:720px;">
+    <h2>📊 从Excel导入产品</h2>
+    <div class="import-excel-zone" id="excelDropZone">
+      <div class="upload-placeholder" id="excelPlaceholder">
+        <span style="font-size:32px;">📁</span>
+        <span>拖拽 .xlsx 文件到这里，或点击选择</span>
+        <span style="font-size:11px;color:#999;">支持产品库Excel格式</span>
+      </div>
+      <div id="excelFileInfo" style="display:none;color:#0d9488;font-weight:600;"></div>
+    </div>
+    <div class="import-summary" id="excelSummary"></div>
+    <div class="select-all-bar" id="selectAllBar" style="display:none">
+      <label><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()" checked> 全选</label>
+      <span style="font-size:12px;color:#888;" id="selectedCount"></span>
+    </div>
+    <div id="excelPreview" style="max-height:400px;overflow-y:auto;"></div>
+    <div class="import-actions" id="importActions" style="display:none">
+      <span style="font-size:12px;color:#888;" id="importHint"></span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn" style="background:#999;color:#fff" onclick="closeExcelModal()">取消</button>
+        <button class="btn btn-green" id="confirmImportBtn" onclick="confirmExcelImport()">✅ 导入选中产品</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="data.js?v=20260731b"></script>
 <script>
 const PWD = 'admin123';
 const STORAGE_KEY = 'reefer_truck_products';
 
+// ============ AUTH ============
 function login() {
   if (document.getElementById('pwdInput').value === PWD) {
     document.getElementById('loginOverlay').style.display = 'none';
@@ -198,11 +262,10 @@ function login() {
   } else { toast('密码错误'); }
 }
 
+// ============ DATA ============
 function getProducts() {
-  // localStorage is the admin's working copy — always use it first
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) return JSON.parse(raw);
-  // No localStorage yet: seed from data.js
   if (typeof PRODUCT_DATA !== 'undefined') {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCT_DATA));
     return JSON.parse(JSON.stringify(PRODUCT_DATA));
@@ -219,6 +282,7 @@ function reloadFromDataJS() {
   toast('✅ 已刷新，共 ' + getProducts().length + ' 款产品');
 }
 
+// ============ DYNAMIC FORM HELPERS ============
 let tempSpecs = [], tempBoxes = [], tempOptAC = [], tempAddons = [];
 
 function renderSpecs() {
@@ -276,6 +340,8 @@ function addAddon() { tempAddons.push({name:'',price:0}); renderAddons(); }
 
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+// ============ RENDER LIST ============
+// ============ IMAGE UPLOAD ============
 let currentImageData = '';
 
 function initUploadZone() {
@@ -338,12 +404,17 @@ function clearImage() {
 const REPO_OWNER = '666prx';
 const REPO_NAME = 'reefer-truck-quote';
 
-function getToken() { return localStorage.getItem('gh_token') || ''; }
-function setToken(t) { localStorage.setItem('gh_token', t); }
+function getToken() {
+  return localStorage.getItem('gh_token') || '';
+}
+
+function setToken(t) {
+  localStorage.setItem('gh_token', t);
+}
 
 async function pushToGitHub(products) {
   const token = getToken();
-  if (!token) throw new Error('请先设置 GitHub Token');
+  if (!token) throw new Error('请先设置GitHub Token');
 
   const content = '// 冷藏车产品数据库\n// 自动发布\n\nconst PRODUCT_DATA = ' + JSON.stringify(products, null, 2) + ';\n';
   const base64 = btoa(unescape(encodeURIComponent(content)));
@@ -371,8 +442,9 @@ async function pushToGitHub(products) {
 async function publishNow() {
   const btn = document.getElementById('publishBtn');
 
+  // First time: ask for token
   if (!getToken()) {
-    const t = prompt('首次发布需要 GitHub Token（存浏览器本地，不会上传）：\n\n1. 打开 https://github.com/settings/tokens\n2. 点 Generate new token (classic)\n3. 勾选 repo 权限，生成后复制粘贴到这里\n\n请输入 Token：');
+    const t = prompt('请输入 GitHub Personal Access Token（只需设置一次）：\n\n1. 打开 https://github.com/settings/tokens\n2. 点击 Generate new token (classic)\n3. 勾选 repo 权限\n4. 复制生成的 Token 粘贴到这里');
     if (!t) return;
     setToken(t.trim());
   }
@@ -391,12 +463,19 @@ async function publishNow() {
 }
 
 function autoPublish() {
-  if (!getToken()) return;
-  publishNow().catch(() => {});
+  if (!getToken()) {
+    toast('⚠️ 未设置GitHub Token，请先点"发布上线"设置');
+    return;
+  }
+  publishNow().catch(function(e) {
+    toast('❌ 自动发布失败：' + e.message + '，请手动点"发布上线"');
+  });
 }
 
-function init() { initUploadZone(); renderList(); }
-
+function init() {
+  initUploadZone();
+  renderList();
+}
 function renderList() {
   const products = getProducts();
   document.getElementById('productCount').textContent = products.length;
@@ -421,13 +500,15 @@ function renderList() {
   `).join('');
 }
 
+// ============ CRUD ============
 function openAdd() {
   document.getElementById('modalTitle').textContent = '添加产品';
   document.getElementById('editId').value = '';
-  clearBasicForm(); clearImage();
+  clearBasicForm();
+  clearImage();
   tempSpecs = []; tempBoxes = [{name:'',desc:'',price:0}]; tempOptAC = []; tempAddons = [];
   renderSpecs(); renderBoxes(); renderOptAC(); renderAddons();
-  document.getElementById('acName').value = ''; document.getElementById('acTemp').value = ''; document.getElementById('acFullPrice').value = '';
+  document.getElementById('acName').value = ''; document.getElementById('acTemp').value = '';
   document.getElementById('editModal').classList.add('show');
 }
 
@@ -440,7 +521,12 @@ function openEdit(index) {
   document.getElementById('editPowerType').value = p.powerType || '纯电';
   document.getElementById('editBasePrice').value = p.basePrice || '';
   document.getElementById('editSellingPrice').value = p.sellingPrice || p.basePrice || '';
-  if (p.image && p.image.length > 0) { setImagePreview(p.image); } else { clearImage(); }
+  // Image
+  if (p.image && p.image.length > 0) {
+    setImagePreview(p.image);
+  } else {
+    clearImage();
+  }
   document.getElementById('editInsurance').value = (p.otherFees||{}).insurance || '';
   document.getElementById('editRegistration').value = (p.otherFees||{}).registration || '';
   document.getElementById('editSubsidy').value = p.subsidy ?? 0;
@@ -485,20 +571,29 @@ function saveProduct() {
         temp: a.temp || ''
       })),
       addons: tempAddons.filter(a => a.name.trim()),
-      otherFees: { insurance: parseInt(document.getElementById('editInsurance').value) || 0, registration: parseInt(document.getElementById('editRegistration').value) || 0 },
+      otherFees: {
+        insurance: parseInt(document.getElementById('editInsurance').value) || 0,
+        registration: parseInt(document.getElementById('editRegistration').value) || 0
+      },
       subsidy: parseInt(document.getElementById('editSubsidy').value) || 0,
       note: document.getElementById('editNote').value.trim()
     };
 
     const products = getProducts();
-    if (index === '') { products.push(product); }
-    else { product.id = products[parseInt(index)].id; products[parseInt(index)] = product; }
+    if (index === '') {
+      products.push(product);
+    } else {
+      product.id = products[parseInt(index)].id;
+      products[parseInt(index)] = product;
+    }
     saveProducts(products);
     closeModal();
     renderList();
     toast(index === '' ? '✅ 产品已添加' : '✅ 产品已更新');
     autoPublish();
-  } catch(e) { toast('保存失败：' + e.message); }
+  } catch(e) {
+    toast('保存失败：' + e.message);
+  }
 }
 
 function deleteProduct(index) {
@@ -517,12 +612,14 @@ function clearBasicForm() {
 }
 function closeModal() { document.getElementById('editModal').classList.remove('show'); }
 
+// ============ IMPORT / EXPORT ============
 function exportData() {
   const products = getProducts();
   const content = '// 冷藏车产品数据库\n// 导出时间：' + new Date().toLocaleString() + '\n// 产品数量：' + products.length + '款\n\nconst PRODUCT_DATA = ' + JSON.stringify(products, null, 2) + ';\n';
   const blob = new Blob([content], {type:'application/javascript'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'data.js'; a.click();
+  const a = document.createElement('a');
+  a.href = url; a.download = 'data.js'; a.click();
   URL.revokeObjectURL(url);
   toast('📥 已导出 data.js');
 }
@@ -541,7 +638,9 @@ function importData(event) {
       saveProducts(data);
       renderList();
       toast('✅ 已导入 ' + data.length + ' 款产品');
-    } catch(err) { toast('导入失败：' + err.message); }
+    } catch(err) {
+      toast('导入失败：' + err.message);
+    }
   };
   reader.readAsText(file);
   event.target.value = '';
@@ -551,6 +650,435 @@ function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ============ EXCEL IMPORT ============
+let excelImportEntries = [];
+
+function handleExcelFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  parseExcelFile(file);
+  event.target.value = '';
+}
+
+function openExcelModal() {
+  document.getElementById('excelModal').classList.add('show');
+  // Init drop zone
+  const zone = document.getElementById('excelDropZone');
+  zone.onclick = () => document.getElementById('excelFileInput').click();
+  zone.ondragover = e => { e.preventDefault(); zone.classList.add('drag-over'); };
+  zone.ondragleave = () => zone.classList.remove('drag-over');
+  zone.ondrop = e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f) parseExcelFile(f);
+  };
+}
+
+function closeExcelModal() {
+  document.getElementById('excelModal').classList.remove('show');
+  excelImportEntries = [];
+}
+
+function parseExcelFile(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, {type: 'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws);
+      if (rows.length === 0) { toast('Excel为空'); return; }
+
+      document.getElementById('excelFileInfo').style.display = 'block';
+      document.getElementById('excelFileInfo').textContent = '✅ 已加载: ' + file.name + ' (' + rows.length + '条数据)';
+      document.getElementById('excelPlaceholder').style.display = 'none';
+
+      // Categorize
+      const cats = {};
+      rows.forEach(r => {
+        const c = r['产品分类'] || '其他';
+        cats[c] = (cats[c] || 0) + 1;
+      });
+      const catNames = {
+        '二类底盘':'底盘','制冷机组':'冷机','保温厢体':'厢体',
+        '冷藏车整车':'整车','底盘+厢体':'整车','通用配件':'配件','专用配件':'配件',
+        '其他整车（非冷藏车）':'其他'
+      };
+      const catCss = {
+        '二类底盘':'cat-chassis','制冷机组':'cat-ac','保温厢体':'cat-box',
+        '冷藏车整车':'cat-complete','底盘+厢体':'cat-complete','通用配件':'cat-accessory','专用配件':'cat-accessory'
+      };
+      let summaryHTML = '';
+      for (const [k, v] of Object.entries(cats)) {
+        const css = catCss[k] || '';
+        summaryHTML += '<span class="tag ' + css + '">' + (catNames[k]||k) + ': ' + v + '条</span>';
+      }
+      document.getElementById('excelSummary').innerHTML = summaryHTML;
+
+      // Generate vehicle entries from chassis + complete vehicles
+      excelImportEntries = autoGenerateVehicles(rows);
+      renderExcelPreview();
+      document.getElementById('selectAllBar').style.display = 'flex';
+      document.getElementById('importActions').style.display = 'flex';
+    } catch(err) {
+      toast('解析Excel失败: ' + err.message);
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function detectPowerType(row) {
+  const text = (row['标题']||'') + (row['产品名称']||'') + (row['备注']||'');
+  // Explicit fuel indicators take priority
+  if (/油车|汽油|柴油|燃油|天然气|CNG/i.test(text.replace(/电动窗|电动车窗|电动门窗|电动调节|电动后视镜/gi,''))) return '燃油';
+  if (/纯电|磷酸铁锂|宁德时代|kWh|度电|电池容量/i.test(text)) return '纯电';
+  if (/混动|增程|甲醇混动/i.test(text)) return '混动';
+  return '燃油';
+}
+
+function extractVehicleSpecs(row) {
+  const specs = {};
+  const remark = (row['备注']||'').replace(/，/g, ';').replace(/、/g, ';');
+  const parts = remark.split(/[；;]/).map(s => s.trim()).filter(Boolean);
+
+  const keyMap = [
+    ['驾驶室', /驾驶室|单排|排半/],
+    ['电池', /电池容量|电池类型|kWh|磷酸铁锂|宁德/i],
+    ['电机', /电机型号|电机功率|kW.*马力/i],
+    ['发动机', /发动机|马力.*汽油|柴油/i],
+    ['轴距', /轴距\d{4}/],
+    ['制动', /制动|气刹|断气刹|液压制动|EBS|楔式/],
+    ['变速箱', /变速箱|万里扬|自动挡|手动挡|AMT/],
+    ['货箱', /货箱内|货箱尺寸|货箱/],
+    ['外尺寸', /外尺寸\d/],
+    ['载重', /T车架|吨/],
+    ['质保', /质保|年.*公里|三电/],
+    ['驱动', /后驱|前驱|四驱|电驱桥|驱动/]
+  ];
+
+  const usedValues = new Set();
+  for (const [key, regex] of keyMap) {
+    for (const part of parts) {
+      if (regex.test(part) && !usedValues.has(part)) {
+        const val = part.length > 30 ? part.substring(0, 28) + '..' : part;
+        specs[key] = val;
+        usedValues.add(part);
+        break;
+      }
+    }
+  }
+
+  // If specs are very sparse, get a few more
+  if (Object.keys(specs).length <= 2) {
+    const shortParts = parts.filter(p => p.length < 25).slice(0, 6);
+    shortParts.forEach((p, i) => {
+      if (!usedValues.has(p)) {
+        specs['配置'+(Object.keys(specs).length+1)] = p;
+        usedValues.add(p);
+      }
+    });
+  }
+
+  return specs;
+}
+
+function autoGenerateVehicles(rows) {
+  const vehicles = [];
+  // Only process chassis and complete vehicles
+  const targetRows = rows.filter(r => {
+    const cat = r['产品分类']||'';
+    return cat === '二类底盘' || cat === '冷藏车整车' || cat === '底盘+厢体';
+  });
+
+  // Reference data pools from Excel
+  const acRows = rows.filter(r => (r['产品分类']||'') === '制冷机组');
+  const boxRows = rows.filter(r => (r['产品分类']||'') === '保温厢体');
+  const accessoryRows = rows.filter(r => {
+    const c = r['产品分类']||'';
+    return c === '通用配件' || c === '专用配件';
+  });
+
+  for (const row of targetRows) {
+    const brand = (row['品牌']||'').trim();
+    const title = (row['产品名称']||row['标题']||'').trim();
+    const powerType = detectPowerType(row);
+    const basePrice = parseInt(row['单个产品推荐销售价']) || 0;
+    const cat = row['产品分类']||'';
+
+    // Build name
+    let name = row['产品名称']||row['标题']||'';
+    // Simplify name if too long
+    if (name.length > 35) {
+      name = name.replace(/2026\s*/g, '').replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '');
+      name = name.replace(/冷藏/g, '冷藏车').replace(/二类底盘/g, '').trim();
+      if (!name.includes('冷藏车') && cat === '二类底盘') name += ' 冷藏车';
+      if (!name.includes(brand)) name = brand + name;
+    }
+
+    // Determine vehicle size class
+    const sizeText = title + (row['备注']||'');
+    const isWide = /宽体|4\.2米|4200|2060/.test(sizeText);
+    const isMedium = /3\.8米|3800|3300|2900/.test(sizeText);
+    const isSmall = /3\.[0-9]米|2900|微型/.test(sizeText);
+
+    // Boxes
+    let boxes;
+    if (cat === '底盘+厢体' || cat === '冷藏车整车') {
+      boxes = [{name:'原厂厢体', desc:'含底盘+厢体', price:0}];
+    } else if (isWide) {
+      boxes = [
+        {name:'原厂厢体', desc:'玻璃钢外壁+热塑板内壁', price:33000},
+        {name:'CIMC中集K2', desc:'高光铝板外壁+VR热塑板内壁，美式全满焊铝地台', price:38000},
+        {name:'CIMC中集K2 不锈钢地板', desc:'K2厢体+全满焊不锈钢地板，304不锈钢防滑', price:42000}
+      ];
+    } else if (isMedium) {
+      boxes = [
+        {name:'原厂厢体', desc:'玻璃钢外壁+热塑板内壁', price:isSmall?26000:28000},
+        {name:'CIMC中集M', desc:'外壁玻璃钢+内壁热塑板，卡槽式厢板', price:isSmall?30000:32000}
+      ];
+    } else {
+      boxes = [{name:'原厂厢体', desc:'玻璃钢外壁+热塑板内壁', price:25000}];
+    }
+
+    // AC units - find matching units from Excel
+    const isEV = powerType === '纯电';
+    let matchedAC = [];
+
+    // Map known Excel AC names to standard names and prices
+    const acNameMap = {
+      '华盛EV600':'华盛EV600 分体机', '华盛EV600MB':'华盛EV600MB 一体机',
+      '华盛EV400':'华盛EV400 分体机', '华盛EV300':'华盛EV300 分体机',
+      '黑盾460Y':'黑盾460Y', '黑盾380Y':'黑盾380Y', '黑盾HE600F':'黑盾HE600F 一体机',
+      '开利PULSOR eCool P6':'开利PULSOR eCool P6',
+      '松芝EX580':'松芝EX580', '松芝X5-S':'松芝X5-S 制冷机组',
+      '松芝X3':'松芝X3 制冷机组', '松芝X1':'松芝X1 制冷机组',
+      '松芝SE380':'松芝SE 380 新能源制冷机组', '松芝SE330':'松芝SE 330 新能源机组',
+      '三丰550':'三丰550分体式冷机'
+    };
+
+    for (const ac of acRows) {
+      const acName = (ac['产品名称']||'').trim();
+      const acTitle = (ac['标题']||'').trim();
+      const acPrice = parseInt(ac['单个产品推荐销售价']) || 0;
+      const acBrand = (ac['品牌']||'').trim();
+
+      // AC filtering: oil-specific ACs go to fuel vehicles, rest go to EV
+      const titleText = acName + acTitle;
+      const isOilAC = /油车|汽油|柴油|燃油/i.test(titleText);
+      // Skip: EV vehicle + oil AC, or fuel vehicle + non-oil AC (which is EV)
+      if (isEV && isOilAC) continue;
+      if (!isEV && !isOilAC) continue;
+
+      // Match known names
+      let matchedName = null;
+      for (const [key, displayName] of Object.entries(acNameMap)) {
+        if (acName.includes(key) || acTitle.includes(key)) {
+          matchedName = displayName;
+          break;
+        }
+      }
+      if (!matchedName) matchedName = acName || acTitle;
+
+      // Determine temp
+      let temp = '';
+      if (/600|HE600|P6|EX580|580/.test(acName + acTitle)) temp = '最低-22℃';
+      else if (/PULSOR|eCool|P6|开利/.test(acName + acTitle) && acPrice >= 25000) temp = '最低-25℃';
+      else if (/460|X5/.test(acName + acTitle)) temp = '最低-20℃';
+      else if (/400|380|X3|330/.test(acName + acTitle)) temp = '最低-18℃';
+      else if (/300|X1/.test(acName + acTitle)) temp = '最低-15℃';
+      else temp = '';
+
+      if (acPrice > 0) {
+        matchedAC.push({name:matchedName, fullPrice:acPrice, temp:temp, acBrand:acBrand});
+      }
+    }
+
+    // Dedupe by name
+    const seen = new Set();
+    matchedAC = matchedAC.filter(a => {
+      const key = a.name;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    // Sort by price
+    matchedAC.sort((a,b) => a.fullPrice - b.fullPrice);
+
+    // Pick default AC (cheapest matching one)
+    let defaultAC = {name:'请联系确认', price:0, fullPrice:0, temp:''};
+    if (matchedAC.length > 0) {
+      const def = matchedAC[0];
+      defaultAC = {name:def.name, price:0, fullPrice:def.fullPrice, temp:def.temp};
+      matchedAC.shift(); // Remove default from optional list
+    }
+
+    // Optional AC pricing: price = fullPrice - defaultAC.fullPrice
+    const optionalAC = matchedAC.map(a => ({
+      name:a.name, price:a.fullPrice - defaultAC.fullPrice, fullPrice:a.fullPrice, temp:a.temp
+    }));
+
+    // Addons from Excel配件 data
+    const addonNames = ['尾板','温度监控','裙边','隔温板','通风槽','地板','防撞条','记录','倒车影像','多媒体','撑杆','贴膜'];
+    const addons = [];
+    for (const acc of accessoryRows) {
+      const accName = (acc['产品名称']||'').trim();
+      const accPrice = parseInt(acc['单个产品推荐销售价']) || 0;
+      if (accPrice <= 0) continue;
+      // Check if this addon is relevant for this vehicle size
+      const isHeavyDuty = /尾板|铝花纹|不锈钢|防撞|通风槽|记录|影像|多媒体/.test(accName);
+      const isUniversal = /隔温板|温度监控|贴膜|撑杆/.test(accName);
+      if (isWide && (isHeavyDuty || isUniversal)) {
+        addons.push({name:accName, price:accPrice});
+      } else if ((isMedium || isSmall) && isUniversal) {
+        addons.push({name:accName, price:accPrice});
+      }
+    }
+    // Dedupe addons by name
+    const seenAddons = new Set();
+    const dedupedAddons = addons.filter(a => {
+      const key = a.name.substring(0, 4);
+      if (seenAddons.has(key)) return false;
+      seenAddons.add(key);
+      return true;
+    });
+
+    // Other fees
+    const insurance = isWide ? 12000 : (isMedium ? 10000 : 9000);
+    const registration = 2000;
+    const subsidy = powerType === '燃油' ? 0 : 35000;
+
+    // ID
+    let idSlug = brand.toLowerCase().replace(/\s+/g,'-');
+    const batteryMatch = title.match(/(\d+\.?\d*)度/);
+    const lengthMatch = title.match(/(\d+\.?\d*)米/);
+    if (batteryMatch) idSlug += '-' + batteryMatch[1] + 'du';
+    if (lengthMatch) idSlug += '-' + lengthMatch[1] + 'm';
+    idSlug += '-' + Date.now().toString(36);
+
+    const vehicle = {
+      id: idSlug,
+      brand: brand,
+      name: name.replace(/\s+/g, ' ').trim(),
+      image: '',
+      powerType: powerType,
+      basePrice: basePrice,
+      sellingPrice: basePrice,
+      specs: extractVehicleSpecs(row),
+      boxes: boxes,
+      defaultAC: defaultAC,
+      optionalAC: optionalAC,
+      addons: dedupedAddons,
+      otherFees: {insurance: insurance, registration: registration},
+      subsidy: subsidy,
+      note: cat === '底盘+厢体' ? '底盘+厢体整车价，不含冷机' : (powerType==='燃油'?'燃油车，不含国家新能源补贴':'')
+    };
+
+    // Use actual image path if available
+    if (row['产品图片']) {
+      vehicle.image = row['产品图片'];
+    }
+
+    vehicles.push(vehicle);
+  }
+
+  return vehicles;
+}
+
+function renderExcelPreview() {
+  const container = document.getElementById('excelPreview');
+  if (excelImportEntries.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#999;">未找到可导入的车型（需要"二类底盘"或"冷藏车整车"类型的产品）</div>';
+    return;
+  }
+  document.getElementById('selectedCount').textContent = excelImportEntries.length + '款待导入';
+
+  container.innerHTML = excelImportEntries.map((v, i) => {
+    const specsKV = Object.entries(v.specs).map(([k,v]) => '<span>' + k + ': ' + v + '</span>').join(' ');
+    const boxesNames = v.boxes.map(b => b.name).join(', ');
+    const acCount = v.optionalAC.length;
+    const addonsCount = v.addons.length;
+    const priceWan = (v.sellingPrice / 10000).toFixed(2);
+    const isNewBrand = v.brand === '远程' || v.brand === '霸王龙';
+    const catLabel = v.powerType === '纯电' ? '纯电' : v.powerType === '混动' ? '混动' : '燃油';
+    const catClass = v.powerType === '纯电' ? 'cat-chassis' : 'cat-complete';
+
+    return `
+      <div class="import-entry-card selected" id="importCard${i}">
+        <input type="checkbox" checked onchange="toggleImportEntry(${i}, this.checked)">
+        <div class="preview-info">
+          <div class="preview-name">
+            ${v.brand} · ${v.name}
+            <span class="cat-badge ${catClass}">${catLabel}</span>
+            ${isNewBrand ? '<span class="cat-badge cat-complete" style="background:#fff3e0;color:#e65100;">新增</span>' : ''}
+          </div>
+          <div class="preview-detail">
+            ${specsKV || '基础配置'}
+            <br>厢体: ${boxesNames} | 冷机: ${v.defaultAC.name} +${acCount}款可选 | 选装: ${addonsCount}项
+          </div>
+        </div>
+        <div class="preview-price">¥${priceWan}万</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleSelectAll() {
+  const checked = document.getElementById('selectAllCheckbox').checked;
+  excelImportEntries.forEach((v, i) => {
+    const card = document.getElementById('importCard'+i);
+    const cb = card ? card.querySelector('input[type=checkbox]') : null;
+    if (cb) cb.checked = checked;
+    if (card) card.classList.toggle('selected', checked);
+  });
+}
+
+function toggleImportEntry(index, checked) {
+  const card = document.getElementById('importCard'+index);
+  if (card) card.classList.toggle('selected', checked);
+}
+
+function confirmExcelImport() {
+  const selected = [];
+  excelImportEntries.forEach((v, i) => {
+    const card = document.getElementById('importCard'+i);
+    const cb = card ? card.querySelector('input[type=checkbox]') : null;
+    if (cb && cb.checked) selected.push(v);
+  });
+
+  if (selected.length === 0) { toast('请至少选择一款产品'); return; }
+
+  // Check for duplicates by name
+  const products = getProducts();
+  const existingNames = new Set(products.map(p => p.name));
+  const skipped = [];
+  const toImport = [];
+
+  for (const v of selected) {
+    if (existingNames.has(v.name)) {
+      skipped.push(v.name);
+    } else {
+      toImport.push(v);
+    }
+  }
+
+  if (toImport.length === 0) {
+    toast('所有选中产品均已存在，无需导入');
+    return;
+  }
+
+  products.push(...toImport);
+  saveProducts(products);
+  renderList();
+  closeExcelModal();
+
+  let msg = '✅ 已导入 ' + toImport.length + ' 款产品';
+  if (skipped.length > 0) msg += '，跳过 ' + skipped.length + ' 款重复';
+  toast(msg);
+  autoPublish();
 }
 
 document.getElementById('pwdInput').focus();
