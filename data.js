@@ -1,6 +1,8 @@
 // 冷藏车产品数据库
 // 自动发布
 
+var DATA_VERSION = 2026080401;
+
 const PRODUCT_DATA = [
   {
     "id": "jmc-eluda-100",

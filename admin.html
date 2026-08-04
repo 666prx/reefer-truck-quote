@@ -7,7 +7,7 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background:#f5f7fa; color:#333; padding-bottom:40px; }
-	
+
 .login-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:linear-gradient(135deg,#0d9488,#0f766e); display:flex; align-items:center; justify-content:center; z-index:9999; }
 .login-box { background:#fff; border-radius:16px; padding:32px 24px; width:90%; max-width:360px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.2); }
 .login-box h2 { margin-bottom:8px; font-size:20px; }
@@ -15,7 +15,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .login-box input { width:100%; padding:12px; border:2px solid #e0e0e0; border-radius:8px; font-size:16px; text-align:center; margin-bottom:12px; }
 .login-box input:focus { border-color:#0d9488; outline:none; }
 .login-box .hint { font-size:11px; color:#999; margin-top:8px; }
-	
+
 .header { background:linear-gradient(135deg,#0d9488,#0f766e); color:#fff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; }
 .header h1 { font-size:18px; }
 .btn { padding:8px 16px; border-radius:6px; border:none; font-size:13px; font-weight:600; cursor:pointer; }
@@ -24,7 +24,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .btn-outline { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.5); }
 .btn-red { background:#e53935; color:#fff; }
 .btn-green { background:#0d9488; color:#fff; }
-	
+
 .container { max-width:800px; margin:0 auto; padding:16px; }
 .product-admin-card { background:#fff; border-radius:10px; padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
 .product-admin-card img { width:60px; height:60px; border-radius:8px; object-fit:cover; background:#e0e0e0; flex-shrink:0; }
@@ -36,7 +36,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .product-admin-card .btns button { padding:6px 12px; border-radius:4px; border:1px solid #ddd; background:#fff; font-size:12px; cursor:pointer; }
 .product-admin-card .btns button:active { background:#f0f0f0; }
 .product-admin-card .btns .del { color:#e53935; border-color:#e53935; }
-	
+
 .modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:1000; overflow-y:auto; }
 .modal.show { display:flex; align-items:flex-start; justify-content:center; padding:20px; }
 .modal-content { background:#fff; border-radius:12px; width:100%; max-width:640px; padding:20px; margin-top:20px; margin-bottom:40px; }
@@ -50,7 +50,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .form-row .form-group { flex:1; }
 .form-actions { display:flex; gap:10px; margin-top:16px; justify-content:flex-end; }
 .help-text { font-size:11px; color:#999; margin-top:4px; }
-	
+
 /* Dynamic list sections */
 .list-section { background:#f8fafb; border-radius:8px; padding:12px; margin-bottom:8px; border:1px solid #e8edf2; }
 .list-section .section-label { font-size:13px; font-weight:600; color:#555; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
@@ -69,14 +69,14 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 .empty-state { text-align:center; padding:40px; color:#999; }
 .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 24px; border-radius:20px; font-size:14px; z-index:9999; opacity:0; transition:opacity .2s; pointer-events:none; }
 .toast.show { opacity:1; }
-	
+
 .upload-zone { border:2px dashed #ccc; border-radius:8px; padding:16px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; min-height:100px; display:flex; align-items:center; justify-content:center; }
 .upload-zone:hover, .upload-zone.drag-over { border-color:#0d9488; background:#f0fdfa; }
 .upload-placeholder { display:flex; flex-direction:column; align-items:center; gap:4px; color:#888; font-size:13px; }
 .upload-preview { position:relative; display:flex; align-items:center; justify-content:center; }
 .upload-preview img { max-height:160px; max-width:100%; border-radius:6px; }
 .clear-img { position:absolute; top:-8px; right:-8px; width:22px; height:22px; border-radius:50%; border:none; background:#e53935; color:#fff; font-size:14px; cursor:pointer; line-height:1; display:flex; align-items:center; justify-content:center; }
-	
+
 /* Excel import modal */
 .import-excel-zone { border:2px dashed #ccc; border-radius:8px; padding:24px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; }
 .import-excel-zone:hover, .import-excel-zone.drag-over { border-color:#0d9488; background:#f0fdfa; }
@@ -120,14 +120,14 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   <div class="actions">
     <button class="btn btn-outline" onclick="exportData()">📥 导出备份</button>
     <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📤 导入</button>
-    <button class="btn btn-outline" id="excelImportBtn" onclick="openExcelModal()">📊 从Excel导入</button>
+	    <button class="btn btn-outline" id="excelImportBtn" onclick="openExcelModal()">📊 从Excel导入</button>
     <button class="btn btn-white" onclick="openAdd()">＋ 添加产品</button>
     <button class="btn btn-outline" onclick="reloadFromDataJS()">🔄 刷新数据</button>
     <button class="btn btn-white" id="publishBtn" onclick="publishNow()" style="background:#e53935;color:#fff;">🚀 发布上线</button>
   </div>
 </div>
 <input type="file" id="importFile" accept=".json,.js" style="display:none" onchange="importData(event)">
-<input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display:none" onchange="handleExcelFile(event)">
+	<input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display:none" onchange="handleExcelFile(event)">
 
 <div class="container" id="productList"></div>
 
@@ -190,10 +190,12 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
     <div class="list-section">
       <div class="section-label"><span>❄️ 标配冷机</span></div>
       <div id="defaultACWrap">
-        <div class="row">
-          <div class="field"><label>名称</label><input id="acName" placeholder="如：华盛火星EV600"></div>
-          <div class="field" style="flex:0 0 120px"><label>温度</label><input id="acTemp" placeholder="如：最低-20℃"></div>
-          <div class="field" style="flex:0 0 120px"><label>销售价（元）</label><input id="acFullPrice" type="number" placeholder="16000"></div>
+        <div class="list-item">
+          <div class="row">
+            <div class="field"><label>名称</label><input id="acName" placeholder="如：华盛火星EV600"></div>
+            <div class="field short"><label>温度</label><input id="acTemp" placeholder="如：最低-20℃"></div>
+            <div class="field short"><label>销售价（元）</label><input id="acFullPrice" type="number" placeholder="16000"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -249,7 +251,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   </div>
 </div>
 
-<script src="data.js?v=20260731b"></script>
+<script src="data.js?v=20260804a"></script>
 <script>
 const PWD = 'admin123';
 const STORAGE_KEY = 'reefer_truck_products';
@@ -412,11 +414,11 @@ function setToken(t) {
   localStorage.setItem('gh_token', t);
 }
 
-async function pushToGitHub(products) {
+async function pushToGitHub(products, dataVersion) {
   const token = getToken();
   if (!token) throw new Error('请先设置GitHub Token');
 
-  const content = '// 冷藏车产品数据库\n// 自动发布\n\nconst PRODUCT_DATA = ' + JSON.stringify(products, null, 2) + ';\n';
+  const content = '// 冷藏车产品数据库\n// 自动发布\n\nvar DATA_VERSION = ' + dataVersion + ';\n\nconst PRODUCT_DATA = ' + JSON.stringify(products, null, 2) + ';\n';
   const base64 = btoa(unescape(encodeURIComponent(content)));
   const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data.js`;
 
@@ -439,6 +441,24 @@ async function pushToGitHub(products) {
   return true;
 }
 
+// 发布后更新 index.html 里的 data.js?v= 参数，让客户浏览器拿到新数据（绕过缓存）
+async function bumpIndexVersion(token, ver) {
+  const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/index.html`;
+  try {
+    const getRes = await fetch(apiUrl, { headers: { 'Authorization': 'token ' + token } });
+    if (!getRes.ok) return;
+    const meta = await getRes.json();
+    const content = decodeURIComponent(escape(atob(meta.content)));
+    const next = content.replace(/data\.js\?v=[0-9a-z]+/g, 'data.js?v=' + ver);
+    if (next === content) return;
+    await fetch(apiUrl, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Bump data.js version', content: btoa(unescape(encodeURIComponent(next))), sha: meta.sha })
+    });
+  } catch(e) {}
+}
+
 async function publishNow() {
   const btn = document.getElementById('publishBtn');
 
@@ -452,7 +472,10 @@ async function publishNow() {
   btn.textContent = '⏳ 发布中...';
   btn.disabled = true;
   try {
-    await pushToGitHub(getProducts());
+    const ver = Date.now();
+    await pushToGitHub(getProducts(), ver);
+    localStorage.setItem(STORAGE_KEY + '_ver', String(ver));
+    await bumpIndexVersion(getToken(), ver);
     toast('✅ 已发布上线！1-2分钟后客户扫码即可看到最新数据');
   } catch(e) {
     toast('❌ 发布失败：' + e.message);
