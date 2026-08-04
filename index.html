@@ -6,6 +6,7 @@
 <title>冷藏车报价配置器</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 tailwind.config = {
   theme: {
@@ -140,7 +141,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFa
       </button>
       <div class="flex gap-2">
         <button onclick="shareQuote()" class="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:border-brand hover:text-brand transition-all"><i class="fa-solid fa-share-nodes mr-1"></i>分享</button>
-        <button onclick="window.print()" class="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:border-brand hover:text-brand transition-all"><i class="fa-solid fa-download mr-1"></i>导出PDF</button>
+        <button id="exportPdfBtn" onclick="window.print()" class="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:border-brand hover:text-brand transition-all"><i class="fa-solid fa-download mr-1"></i>导出PDF</button>
+        <button id="saveImgBtn" onclick="saveQuoteImage()" style="display:none" class="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:border-brand hover:text-brand transition-all"><i class="fa-solid fa-image mr-1"></i>保存图片</button>
       </div>
     </div>
   </div>
@@ -419,6 +421,13 @@ function showQuote() {
   var quoteNo = 'QD' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
   var timeStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
 
+  // 移动端（含微信内置浏览器）window.print 无效，改用"保存图片"；桌面端保留导出PDF
+  var isMobileUI = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0 && window.innerWidth < 768);
+  var pdfBtn = document.getElementById('exportPdfBtn');
+  var imgBtn = document.getElementById('saveImgBtn');
+  if (pdfBtn) pdfBtn.style.display = isMobileUI ? 'none' : '';
+  if (imgBtn) imgBtn.style.display = isMobileUI ? '' : 'none';
+
   // Update step indicator
   document.getElementById('sd1').className = 'step-dot done w-2.5 h-2.5 rounded-full inline-block';
   document.getElementById('sd1').style.background = '#00B96B';
@@ -507,6 +516,48 @@ function shareQuote() {
   text += '\n\n⚠️ 当前报价价格仅作参考，具体金额请联系18084808070出详细报价方案';
   if (navigator.share) { navigator.share({ title: '冷藏车报价单', text: text }); }
   else { navigator.clipboard.writeText(text).then(function(){ alert('报价单已复制到剪贴板！'); }); }
+}
+
+// ============ SAVE IMAGE (mobile) ============
+function saveQuoteImage() {
+  var el = document.getElementById('quoteContent');
+  if (!el || typeof html2canvas === 'undefined') { alert('图片生成组件加载失败，请检查网络后重试'); return; }
+  var btn = document.getElementById('saveImgBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>生成中…'; }
+  html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#F7F8FA', windowWidth: document.documentElement.scrollWidth, onclone: function(clone) {
+    // 克隆文档里移除 fixed 定位元素（顶部栏、底部条），避免被画进图片
+    clone.querySelectorAll('.no-print').forEach(function(n) { n.style.display = 'none'; });
+  }}).then(function(canvas) {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-image mr-1"></i>保存图片'; }
+    showImageOverlay(canvas.toDataURL('image/png'));
+  }).catch(function(e) {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-image mr-1"></i>保存图片'; }
+    alert('图片生成失败：' + e.message);
+  });
+}
+function showImageOverlay(dataUrl) {
+  var overlay = document.createElement('div');
+  overlay.id = 'imgOverlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px;';
+  var img = document.createElement('img');
+  img.src = dataUrl;
+  img.style.cssText = 'max-width:100%;max-height:72vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.5);';
+  var tip = document.createElement('p');
+  tip.style.cssText = 'color:#fff;font-size:13px;text-align:center;line-height:1.7;';
+  tip.innerHTML = '👆 <b>长按图片保存到相册</b><br>保存后可发送给客户';
+  var close = document.createElement('button');
+  close.textContent = '✕ 关闭';
+  close.style.cssText = 'background:#fff;color:#111;border:none;border-radius:10px;padding:10px 32px;font-size:14px;font-weight:600;';
+  close.onclick = hideImageOverlay;
+  overlay.appendChild(img);
+  overlay.appendChild(tip);
+  overlay.appendChild(close);
+  overlay.onclick = function(e) { if (e.target === overlay) hideImageOverlay(); };
+  document.body.appendChild(overlay);
+}
+function hideImageOverlay() {
+  var o = document.getElementById('imgOverlay');
+  if (o) o.remove();
 }
 
 // ============ NAVIGATION ============
